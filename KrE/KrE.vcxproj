@@ -143,15 +143,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="guisup.c" />
     <ClCompile Include="importLib.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="mainwnd.cpp" />
+    <ClCompile Include="mainwnd.c" />
+    <ClCompile Include="support.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ph.h" />
     <ClInclude Include="include\phbase.h" />
     <ClInclude Include="include\phgui.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ProcessHacker.rc" />

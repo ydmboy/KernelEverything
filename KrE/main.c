@@ -4,29 +4,55 @@
 #include "resource.h"
 
 
-HINSTANCE PhInstanceHandle;
+HINSTANCE KrEInstanceHandle;
 PWSTR KrEWindowClassName = L"KernelEverything";
+
+
+
 
 INT WINAPI wWinMain(
     HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
-    LPSTR lpCmdLine,
+    PWSTR lpCmdLine,
     INT nCmdShow
 )
 {
-    PhInstanceHandle = hInstance;
+    KrEInstanceHandle = hInstance;
 
     KrERegisterWindowClass();
     KrEInitializeCommonControls();
 
-    //PhInitializeCommonControls();
+    if(!KrEMainWndInitialization(nCmdShow))
+    {
+        return 1;
+    }
 
-    //if (!PhInitializeMainWindow(nCmdShow))
-    //{
-    //    return 1;
-    //}
 
-    //return PhMainMessageLoop();
+    return KrEMainMessageLoop();
+
+}
+
+
+INT KrEMainMessageLoop()
+{
+    BOOL result;
+    MSG message;
+    HACCEL acceleratorTable;
+    acceleratorTable = LoadAccelerators(KrEInstanceHandle, MAKEINTRESOURCE(IDR_MAINWND));
+
+    while(result = GetMessage(&message,NULL,0,0))
+    {
+        if (result == -1)
+            return 1;
+        if(!TranslateAccelerator(message.hwnd,acceleratorTable,&message))
+        {
+            TranslateMessage(&message);
+            DispatchMessage(&message);
+        }
+
+    }
+    return (INT)message.wParam;
+
 }
 
 VOID KrEInitializeCommonControls()
@@ -46,14 +72,16 @@ ATOM KrERegisterWindowClass()
     wcex.lpfnWndProc = KrEMainWndProc;
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
-    wcex.hInstance = PhInstanceHandle;
-    wcex.hIcon = LoadIcon(PhInstanceHandle,MAKEINTRESOURCE(IDI_KRE));
+    wcex.hInstance = KrEInstanceHandle;
+    wcex.hIcon = LoadIcon(KrEInstanceHandle,MAKEINTRESOURCE(IDI_KRE));
     wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)(COLOR_HIGHLIGHT + 1);
-    wcex.lpszMenuName = MAKEINTRESOURCE(IDR_MAINWND);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.lpszMenuName = MAKEINTRESOURCE(IDR_MENU);
     wcex.lpszClassName = KrEWindowClassName;
-    wcex.hIconSm = (HICON)LoadImage(PhInstanceHandle, MAKEINTRESOURCE(IDI_KRE), IMAGE_ICON, 16, 16, 0);
+    wcex.hIconSm = (HICON)LoadImage(KrEInstanceHandle, MAKEINTRESOURCE(IDI_KRE), IMAGE_ICON, 16, 16, 0);
 
     return RegisterClassEx(&wcex);
 
 }
+
+

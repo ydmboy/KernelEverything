@@ -1,6 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "resource.h"
+#include "resource1.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -60,9 +60,11 @@ IDI_PROCESSHACKER       ICON                    "main.ico"
 // Menu
 //
 
-IDR_MENU1 MENU
+IDR_MENU MENU
 BEGIN
-    MENUITEM "开始i",                         0
+    MENUITEM "开始",                          0
+    MENUITEM "准备",                          0
+    MENUITEM "现在",                          0
 END
 
 #endif    // 中文(简体，中国) resources

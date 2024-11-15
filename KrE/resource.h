@@ -3,8 +3,8 @@
 // π© ProcessHacker.rc  π”√
 //
 #define IDI_KRE                       101
-#define IDR_MENU1                       102
-#define IDR_MAINWND                     102
+#define IDR_MENU                      102
+#define IDR_MAINWND                   103
 
 
 // Next default values for new objects
