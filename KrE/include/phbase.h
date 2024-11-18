@@ -10,6 +10,8 @@
 
 extern PWSTR KrEWindowClassName;
 extern HINSTANCE KrEInstanceHandle;
+extern HFONT KrEApplicationFont;
+
 
 
 #endif

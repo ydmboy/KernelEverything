@@ -3,6 +3,13 @@
 HWND KrEMainwindowHandle;
 static HWND TabControlHandle;
 
+static HWND ProcessListViewHandle;
+static HWND ServiceListViewHandle;
+static HWND NetworkListViewHandle;
+
+static INT ProcessesTabIndex;
+static INT NetworkTabIndex;
+static INT NetworkTabIndex;
 
 
 
@@ -12,6 +19,10 @@ BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 	KrEMainwindowHandle = CreateWindow(KrEWindowClassName, KrE_APP_NAME, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, KrEInstanceHandle, NULL);
 	if (!KrEMainwindowHandle)
 		return FALSE;
+
+
+	KrEInitializeFont(KrEMainwindowHandle);
+
 	ShowWindow(KrEMainwindowHandle, ShowCommand);
 
 	KrEMainWndCreateTab();
@@ -27,6 +38,9 @@ VOID KrEMainWndCreateTab()
 	KrEAddTabControlTab(TabControlHandle, 0, L"Processes");
 	KrEAddTabControlTab(TabControlHandle, 1, L"Services");
 	KrEAddTabControlTab(TabControlHandle, 2, L"NetWork");
+
+	ProcessListViewHandle = KrECreateListViewControl(KrEMainwindowHandle,)
+
 
 }
 

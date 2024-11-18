@@ -10,6 +10,9 @@
 INT KrEMainMessageLoop();
 BOOLEAN KrEMainWndInitialization(__in INT ShowCommand);
 
+
+VOID KrEInitializeFont(__in HWND hWnd);
+
 VOID KrEInitializeCommonControls();
 
 LRESULT  CALLBACK KrEMainWndProc(
@@ -44,6 +47,12 @@ VOID FORCEINLINE KrESetControlPosition(
 );
 
 VOID KrEMainWndLayout();
+
+
+HWND KrECreateListViewControl(
+	HWND ParentHandle,
+	INT_PTR Id
+);
 
 #endif
 

@@ -6,6 +6,10 @@
 #define IDR_MENU                      102
 #define IDR_MAINWND                   103
 
+#define ID_MAINWND_PROCESSLV            2001
+#define ID_MAINWND_SERVICELV            2002
+#define ID_MAINWND_NETWORKLV            2003
+
 
 // Next default values for new objects
 // 
