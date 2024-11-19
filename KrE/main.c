@@ -76,8 +76,9 @@ ATOM KrERegisterWindowClass()
     wcex.hInstance = KrEInstanceHandle;
     wcex.hIcon = LoadIcon(KrEInstanceHandle,MAKEINTRESOURCE(IDI_KRE));
     wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW +1);
     wcex.lpszMenuName = MAKEINTRESOURCE(IDR_MENU);
+    //wcex.lpszMenuName = NULL;
     wcex.lpszClassName = KrEWindowClassName;
     wcex.hIconSm = (HICON)LoadImage(KrEInstanceHandle, MAKEINTRESOURCE(IDI_KRE), IMAGE_ICON, 16, 16, 0);
 
@@ -101,7 +102,7 @@ VOID KrEInitializeFont(__in HWND hWnd)
         CLIP_DEFAULT_PRECIS,
         DEFAULT_QUALITY,
         DEFAULT_PITCH,
-        L"Tahoma"
+        L"Segoe UI"
     )))
     {
         NONCLIENTMETRICS metrics;

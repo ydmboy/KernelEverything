@@ -1,6 +1,6 @@
 #include <phgui.h>
 
-HWND KrEMainwindowHandle;
+HWND KrEMainWindowHandle;
 static HWND TabControlHandle;
 
 static HWND ProcessListViewHandle;
@@ -8,7 +8,7 @@ static HWND ServiceListViewHandle;
 static HWND NetworkListViewHandle;
 
 static INT ProcessesTabIndex;
-static INT NetworkTabIndex;
+static INT ServiceTabIndex;
 static INT NetworkTabIndex;
 
 
@@ -16,30 +16,45 @@ static INT NetworkTabIndex;
 // rt : true is successful
 BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 {
-	KrEMainwindowHandle = CreateWindow(KrEWindowClassName, KrE_APP_NAME, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, KrEInstanceHandle, NULL);
-	if (!KrEMainwindowHandle)
+	KrEMainWindowHandle = CreateWindow(KrEWindowClassName, KrE_APP_NAME, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, KrEInstanceHandle, NULL);
+	if (!KrEMainWindowHandle)
 		return FALSE;
 
 
-	KrEInitializeFont(KrEMainwindowHandle);
+	KrEInitializeFont(KrEMainWindowHandle);
 
-	ShowWindow(KrEMainwindowHandle, ShowCommand);
 
 	KrEMainWndCreateTab();
-	KrEMainWndLayout();
+	//KrEMainWndLayout();
 
+	ShowWindow(KrEMainWindowHandle, ShowCommand);
 	return TRUE;
 
 }
 
 VOID KrEMainWndCreateTab()
 {
-	TabControlHandle = KrECreateTabControl(KrEMainwindowHandle);
+
+	// To create the main tab 
+	TabControlHandle = KrECreateTabControl(KrEMainWindowHandle);
+	//add  the  subtab
 	KrEAddTabControlTab(TabControlHandle, 0, L"Processes");
 	KrEAddTabControlTab(TabControlHandle, 1, L"Services");
 	KrEAddTabControlTab(TabControlHandle, 2, L"NetWork");
 
-	ProcessListViewHandle = KrECreateListViewControl(KrEMainwindowHandle,)
+	ProcessListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_PROCESSLV);
+	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER,-1);
+	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Name");
+	
+	ServiceListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_SERVICELV);
+	ListView_SetExtendedListViewStyleEx(ServiceListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER,-1);
+	KrEAddListViewColumn(ServiceListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Service");
+
+	NetworkListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_NETWORKLV);
+	ListView_SetExtendedListViewStyle(NetworkListViewHandle, LVS_EX_FULLROWSELECT|
+		LVS_EX_DOUBLEBUFFER,-1);
+
+	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"gogo");
 
 
 }
@@ -47,8 +62,9 @@ VOID KrEMainWndCreateTab()
 VOID KrEMainWndLayout()
 {
 	RECT rect;
-	GetClientRect(KrEMainwindowHandle, &rect);
-	KrESetControlPosition(TabControlHandle, 0, 0, rect.right, rect.bottom);
+	GetClientRect(KrEMainWindowHandle, &rect);
+	KrESetControlPosition(TabControlHandle, rect.left, rect.top, rect.right, rect.bottom);
+	KrEmainWndTabControlOnLayout();
 }
 
 LRESULT CALLBACK KrEMainWndProc(
@@ -66,12 +82,12 @@ LRESULT CALLBACK KrEMainWndProc(
 	break;
 	case WM_PAINT:
 	{
-
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 	break;
 	case WM_SIZE:
 	{
-
+		KrEMainWndLayout();
 	}
 	break;
 	case WM_DESTROY:
@@ -87,6 +103,9 @@ LRESULT CALLBACK KrEMainWndProc(
 
 }
 
+
+// ** name:    KrESetControlPosition
+// ** function:set all kinds of the window's the position include the Tab
 VOID FORCEINLINE KrESetControlPosition(
 	HWND Handle,
 	INT Left,
@@ -95,5 +114,29 @@ VOID FORCEINLINE KrESetControlPosition(
 	INT Bottom
 )
 {
-	SetWindowPos(Handle, NULL, Left, Top, Right, Bottom, SWP_NOZORDER);
+	SetWindowPos(Handle, NULL, Left, Top, Right-Left, Bottom-Top, SWP_NOACTIVATE | SWP_NOREDRAW |SWP_NOZORDER);
+}
+
+VOID KrEmainWndTabControlOnLayout()
+{
+	RECT rect;
+	INT selectedIndex;
+
+	GetClientRect(KrEMainWindowHandle, &rect);
+	TabCtrl_AdjustRect(TabControlHandle, FALSE, &rect);
+
+	selectedIndex = TabCtrl_GetCurSel(TabControlHandle);
+
+	if(selectedIndex == ProcessesTabIndex)
+	{
+		KrESetControlPosition(ProcessListViewHandle, rect.left, rect.top, rect.right, rect.bottom);
+	}
+	else if(selectedIndex == ServiceTabIndex)
+	{
+		KrESetControlPosition(ServiceListViewHandle, rect.left, rect.top, rect.right, rect.bottom);
+	}
+	else if(selectedIndex == NetworkTabIndex)
+	{
+			KrESetControlPosition(NetworkListViewHandle, rect.left, rect.top, rect.right, rect.bottom);
+	}
 }

@@ -6,6 +6,7 @@
 #include <phbase.h>
 #include <ph.h>
 #include <CommCtrl.h>
+#include "resource.h"
 
 INT KrEMainMessageLoop();
 BOOLEAN KrEMainWndInitialization(__in INT ShowCommand);
@@ -46,12 +47,27 @@ VOID FORCEINLINE KrESetControlPosition(
 	INT Bottom
 );
 
+
+// layt out 
 VOID KrEMainWndLayout();
+VOID KrEmainWndTabControlOnLayout();
+
 
 
 HWND KrECreateListViewControl(
 	HWND ParentHandle,
 	INT_PTR Id
+);
+
+
+INT KrEAddListViewColumn(
+	HWND ListViewHandle,
+	INT Index,
+	INT DisplayIndex,
+	INT SubItemIndex,
+	INT Format,
+	INT Width,
+	PWSTR Text
 );
 
 #endif

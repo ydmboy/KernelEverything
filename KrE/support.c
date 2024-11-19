@@ -19,3 +19,5 @@ INT KrEShowMessage_V(
 	return MessageBox(hWnd,message,KrE_APP_NAME,Type);
 
 }
+
+

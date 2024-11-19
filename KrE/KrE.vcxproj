@@ -154,10 +154,6 @@
     <ClInclude Include="include\phbase.h" />
     <ClInclude Include="include\phgui.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="resource1.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="ProcessHacker.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="main.ico" />
