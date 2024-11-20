@@ -2,7 +2,7 @@
 
 HWND KrECreateTabControl(HWND ParentHandle)
 {
-	HWND tabControlHandle = CreateWindow(WC_TABCONTROL, L"", WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE , 0, 0, 3, 3, ParentHandle, NULL, KrEInstanceHandle, NULL);
+	HWND tabControlHandle = CreateWindow(WC_TABCONTROL, L"", WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE , 0, 0, 1, 1, ParentHandle, NULL, KrEInstanceHandle, NULL);
 	//HWND tabControlHandle = NULL;
 	// set the tab fonts
 	if(tabControlHandle)
@@ -31,7 +31,7 @@ HWND KrECreateListViewControl(
 	INT_PTR Id
 )
 {
-	return CreateWindow(WC_LISTVIEW, L"", WS_CHILD | LVS_REPORT | WS_VISIBLE | WS_BORDER, 0, 0, 3, 3, ParentHandle, (HMENU)Id, KrEInstanceHandle, NULL);
+	return CreateWindow(WC_LISTVIEW, L"", WS_CHILD | LVS_REPORT | WS_VISIBLE | WS_BORDER, 0, 0, 1, 1, ParentHandle, (HMENU)Id, KrEInstanceHandle, NULL);
 }
 
 

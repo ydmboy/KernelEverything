@@ -25,7 +25,7 @@ BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 
 
 	KrEMainWndCreateTab();
-	//KrEMainWndLayout();
+	KrEMainWndLayout();
 
 	ShowWindow(KrEMainWindowHandle, ShowCommand);
 	return TRUE;
@@ -41,20 +41,28 @@ VOID KrEMainWndCreateTab()
 	KrEAddTabControlTab(TabControlHandle, 0, L"Processes");
 	KrEAddTabControlTab(TabControlHandle, 1, L"Services");
 	KrEAddTabControlTab(TabControlHandle, 2, L"NetWork");
+	
 
 	ProcessListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_PROCESSLV);
-	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER,-1);
+	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER| LVS_EX_GRIDLINES,-1);
+
+
 	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Name");
-	
+
+
+
 	ServiceListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_SERVICELV);
-	ListView_SetExtendedListViewStyleEx(ServiceListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER,-1);
+	ListView_SetExtendedListViewStyleEx(ServiceListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES,-1);
 	KrEAddListViewColumn(ServiceListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Service");
+
+
 
 	NetworkListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_NETWORKLV);
 	ListView_SetExtendedListViewStyle(NetworkListViewHandle, LVS_EX_FULLROWSELECT|
 		LVS_EX_DOUBLEBUFFER,-1);
+	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"netWork");
 
-	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"gogo");
+
 
 
 }
@@ -63,8 +71,8 @@ VOID KrEMainWndLayout()
 {
 	RECT rect;
 	GetClientRect(KrEMainWindowHandle, &rect);
-	KrESetControlPosition(TabControlHandle, rect.left, rect.top, rect.right, rect.bottom);
-	KrEmainWndTabControlOnLayout();
+	//KrESetControlPosition(TabControlHandle, rect.left, rect.top, rect.right, rect.bottom);
+	//KrEmainWndTabControlOnLayout();
 }
 
 LRESULT CALLBACK KrEMainWndProc(
@@ -123,7 +131,7 @@ VOID KrEmainWndTabControlOnLayout()
 	INT selectedIndex;
 
 	GetClientRect(KrEMainWindowHandle, &rect);
-	TabCtrl_AdjustRect(TabControlHandle, FALSE, &rect);
+	//TabCtrl_AdjustRect(TabControlHandle, FALSE, &rect);
 
 	selectedIndex = TabCtrl_GetCurSel(TabControlHandle);
 
