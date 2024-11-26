@@ -21,3 +21,9 @@ INT KrEShowMessage_V(
 }
 
 
+PVOID KrEAllocate(__in SIZE_T Size)
+{
+	return HeapAlloc(KrEHeapHandle, 0, Size);
+}
+
+

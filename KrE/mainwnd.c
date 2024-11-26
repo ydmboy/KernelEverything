@@ -1,5 +1,5 @@
 #include <phgui.h>
-
+#include <commctrl.h>
 HWND KrEMainWindowHandle;
 static HWND TabControlHandle;
 
@@ -37,6 +37,9 @@ VOID KrEMainWndCreateTab()
 
 	// To create the main tab 
 	TabControlHandle = KrECreateTabControl(KrEMainWindowHandle);
+	if (!TabControlHandle)
+		return;
+
 	//add  the  subtab
 	KrEAddTabControlTab(TabControlHandle, 0, L"Processes");
 	KrEAddTabControlTab(TabControlHandle, 1, L"Services");
@@ -45,8 +48,6 @@ VOID KrEMainWndCreateTab()
 
 	ProcessListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_PROCESSLV);
 	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER| LVS_EX_GRIDLINES,-1);
-
-
 	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Name");
 
 
@@ -62,16 +63,13 @@ VOID KrEMainWndCreateTab()
 		LVS_EX_DOUBLEBUFFER,-1);
 	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"netWork");
 
-
-
-
 }
 
 VOID KrEMainWndLayout()
 {
 	RECT rect;
 	GetClientRect(KrEMainWindowHandle, &rect);
-	//KrESetControlPosition(TabControlHandle, rect.left, rect.top, rect.right, rect.bottom);
+	KrESetControlPosition(TabControlHandle, rect.left, rect.top, rect.right, rect.bottom);
 	//KrEmainWndTabControlOnLayout();
 }
 
@@ -131,7 +129,7 @@ VOID KrEmainWndTabControlOnLayout()
 	INT selectedIndex;
 
 	GetClientRect(KrEMainWindowHandle, &rect);
-	//TabCtrl_AdjustRect(TabControlHandle, FALSE, &rect);
+	TabCtrl_AdjustRect(TabControlHandle, FALSE, &rect);
 
 	selectedIndex = TabCtrl_GetCurSel(TabControlHandle);
 

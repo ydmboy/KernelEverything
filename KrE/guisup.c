@@ -1,8 +1,14 @@
 #include <phgui.h>
 
+#define TCM_SETBKCOLOR          (TCM_FIRST + 1)
 HWND KrECreateTabControl(HWND ParentHandle)
 {
 	HWND tabControlHandle = CreateWindow(WC_TABCONTROL, L"", WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE , 0, 0, 1, 1, ParentHandle, NULL, KrEInstanceHandle, NULL);
+
+	COLORREF bgColor = RGB(200, 200, 255); // µ­À¶É«
+	SendMessage(tabControlHandle, CCM_SETBKCOLOR, 0, (LPARAM)(COLORREF)(bgColor));
+
+
 	//HWND tabControlHandle = NULL;
 	// set the tab fonts
 	if(tabControlHandle)

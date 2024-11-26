@@ -7,6 +7,7 @@
 HINSTANCE KrEInstanceHandle;
 PWSTR KrEWindowClassName = L"KernelEverything";
 HFONT KrEApplicationFont;
+HANDLE KrEHeapHandle;
 
 
 
@@ -19,6 +20,11 @@ INT WINAPI wWinMain(
 )
 {
     KrEInstanceHandle = hInstance;
+    KrEHeapHandle = HeapCreate(0,0,0);
+    if(!KrEHeapHandle)
+    {
+        KrEShowError(NULL, "HeapCreate Error\n");
+    }
 
     KrERegisterWindowClass();
     KrEInitializeCommonControls();

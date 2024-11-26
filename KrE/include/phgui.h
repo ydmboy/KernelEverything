@@ -8,6 +8,7 @@
 #include <CommCtrl.h>
 #include "resource.h"
 
+
 INT KrEMainMessageLoop();
 BOOLEAN KrEMainWndInitialization(__in INT ShowCommand);
 

@@ -147,9 +147,14 @@
     <ClCompile Include="importLib.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mainwnd.c" />
+    <ClCompile Include="ntimport.c" />
+    <ClCompile Include="process.c" />
     <ClCompile Include="support.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ntbase.h" />
+    <ClInclude Include="include\ntexapi.h" />
+    <ClInclude Include="include\ntimport.h" />
     <ClInclude Include="include\ph.h" />
     <ClInclude Include="include\phbase.h" />
     <ClInclude Include="include\phgui.h" />
@@ -157,6 +162,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="main.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ProcessHacker.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
