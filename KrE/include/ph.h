@@ -1,6 +1,11 @@
-#pragma once
 #ifndef PH_H
 #define PH_H
+
+
+
+#if define(_MSC_VER)&&(_MSC_VER)>=1020
+#pragma once
+#endif
 
 #include <phbase.h>
 //some definition

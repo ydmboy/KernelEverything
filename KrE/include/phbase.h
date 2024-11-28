@@ -1,6 +1,11 @@
-#pragma once
 #ifndef _PHBASE_H
 #define _PHBASE_H
+
+
+
+#if define(_MSC_VER)&&(_MSC_VER)>=1020
+#pragma once
+#endif
 
 #define WIN32_NO_STATUS
 #include <Windows.h>

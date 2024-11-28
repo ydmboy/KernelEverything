@@ -155,6 +155,7 @@
     <ClInclude Include="include\ntbase.h" />
     <ClInclude Include="include\ntexapi.h" />
     <ClInclude Include="include\ntimport.h" />
+    <ClInclude Include="include\ntpsapi.h" />
     <ClInclude Include="include\ph.h" />
     <ClInclude Include="include\phbase.h" />
     <ClInclude Include="include\phgui.h" />

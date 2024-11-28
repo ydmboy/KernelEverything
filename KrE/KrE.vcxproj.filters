@@ -59,6 +59,9 @@
     <ClInclude Include="include\ntimport.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\ntpsapi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="main.ico">
