@@ -2,7 +2,11 @@
 #define _NTEXAPI_H
 
 
-#if define(_MSC_VER)&&(_MSC_VER)>=1020
+// some nt types
+
+#include <ntbasic.h>
+
+#if defined(_MSC_VER)&&(_MSC_VER>=1020)
 #pragma once
 #endif
 
@@ -155,5 +159,13 @@ typedef struct _SYSTEM_PROCESS_INFORMATION
     LARGE_INTEGER WriteTransferCount;
     LARGE_INTEGER OtherTransferCount;
 } SYSTEM_PROCESS_INFORMATION, * PSYSTEM_PROCESS_INFORMATION;
+
+typedef NTSTATUS(NTAPI* _NtQuerySystemInformation)(
+    __in SYSTEM_INFORMATION_CLASS SystemInformationClass,
+    __out_bcount_opt(SystemInformationLength) PVOID SystemInformation,
+    __in ULONG SystemInformationLength,
+    __out_opt PULONG ReturnLength
+    );
+
 
 #endif

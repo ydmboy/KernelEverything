@@ -13,14 +13,15 @@ NTSTATUS KrEEnumProcesses(
 	ULONG bufferSize = 2048;
 	PSYSTEM_PROCESS_INFORMATION procInfo;
 
-	buffer = KrEAllocate(1024);
+	buffer = KrEAllocate(bufferSize);
 	while(TRUE)
 	{
 		if(!buffer)
 		{
 			return STATUS_INSUFFICIENT_RESOURCES;
 		}
-		
+		status = NtQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, &bufferSize);
+		if(NT_SUCCESS(status))
 
 	}
 	 

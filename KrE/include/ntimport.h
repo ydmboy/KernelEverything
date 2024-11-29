@@ -1,28 +1,22 @@
 #ifndef _PH_BASE_H
 #define _PH_BASE_H
 
-
-
-#if define(_MSC_VER)&&(_MSC_VER)>=1020
+#if defined(_MSC_VER)&&(_MSC_VER>=1020)
 #pragma once
 #endif
 
-
+#include <ntpsapi.h>
+#include <ntpebteb.h>
 #include <ntexapi.h>
+#include <ntobapi.h>
 
 #ifdef NTIMPORT_PRIVATE
 #define EXT
 #define EQNULL = NULL
-
-else
-
+#else
 #define EXT extern
 #define EQNULL
-
 #endif
-
-
-
 
 EXT _NtAlertResumeThread NtAlertResumeThread EQNULL;
 EXT _NtAlertThread NtAlertThread EQNULL;
@@ -46,5 +40,6 @@ EXT _NtSuspendThread NtSuspendThread EQNULL;
 EXT _NtTerminateProcess NtTerminateProcess EQNULL;
 EXT _NtTerminateThread NtTerminateThread EQNULL;
 
+BOOLEAN KrEInitializeImport();
 
 #endif

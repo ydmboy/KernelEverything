@@ -29,6 +29,8 @@ INT WINAPI wWinMain(
     KrERegisterWindowClass();
     KrEInitializeCommonControls();
 
+    KrEInitializeImport();
+
     if(!KrEMainWndInitialization(nCmdShow))
     {
         return 1;

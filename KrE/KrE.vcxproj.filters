@@ -53,13 +53,19 @@
     <ClInclude Include="include\ntexapi.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\ntbase.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\ntimport.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\ntpsapi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ntbasic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ntpebteb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ntobapi.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

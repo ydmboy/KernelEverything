@@ -152,9 +152,11 @@
     <ClCompile Include="support.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\ntbase.h" />
+    <ClInclude Include="include\ntbasic.h" />
     <ClInclude Include="include\ntexapi.h" />
     <ClInclude Include="include\ntimport.h" />
+    <ClInclude Include="include\ntobapi.h" />
+    <ClInclude Include="include\ntpebteb.h" />
     <ClInclude Include="include\ntpsapi.h" />
     <ClInclude Include="include\ph.h" />
     <ClInclude Include="include\phbase.h" />
