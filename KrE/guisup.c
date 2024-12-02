@@ -61,3 +61,19 @@ INT KrEAddListViewColumn(
 
 	return ListView_InsertColumn(ListViewHandle, Index, &column);
 }
+
+
+INT KrEAddListViewItem(HWND ListViewHandle,
+	INT Index,
+	PWSTR Text
+)
+{
+	LVITEM item;
+	item.mask = LVIF_TEXT;
+	item.iItem = Index;
+	item.iSubItem = 0;
+	item.pszText = Text;
+	return ListView_InsertItem(ListViewHandle, &item);
+
+
+}

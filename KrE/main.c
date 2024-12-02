@@ -35,8 +35,6 @@ INT WINAPI wWinMain(
     {
         return 1;
     }
-
-
     return KrEMainMessageLoop();
 
 }

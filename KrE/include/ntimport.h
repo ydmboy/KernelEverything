@@ -9,6 +9,7 @@
 #include <ntpebteb.h>
 #include <ntexapi.h>
 #include <ntobapi.h>
+#include <ntbasic.h>
 
 #ifdef NTIMPORT_PRIVATE
 #define EXT

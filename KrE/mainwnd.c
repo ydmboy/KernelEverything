@@ -29,8 +29,27 @@ BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 
 	ShowWindow(KrEMainWindowHandle, ShowCommand);
 	return TRUE;
-
 }
+
+BOOLEAN ProcessEnumCallBack(PSYSTEM_PROCESS_INFORMATION Process)
+{
+	PWSTR buffer;
+	buffer = KrEAllocate(Process->ImageName.Length + sizeof(WCHAR));
+	memcpy(buffer, Process->ImageName.Buffer, Process->ImageName.Length);
+	buffer[Process->ImageName.Length / sizeof(WCHAR)] = 0;
+
+	KrEAddListViewItem(
+		ProcessListViewHandle,
+		MAXINT,
+		buffer
+	);
+
+	
+
+
+	return FALSE;  //  this is where bug is likely to occur. 
+}
+
 
 VOID KrEMainWndCreateTab()
 {
@@ -48,7 +67,9 @@ VOID KrEMainWndCreateTab()
 
 	ProcessListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_PROCESSLV);
 	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER| LVS_EX_GRIDLINES,-1);
-	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Name");
+
+
+	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Process Name");
 
 
 
@@ -63,6 +84,8 @@ VOID KrEMainWndCreateTab()
 		LVS_EX_DOUBLEBUFFER,-1);
 	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"netWork");
 
+	KrEEnumProcesses(ProcessEnumCallBack, NULL);
+
 }
 
 VOID KrEMainWndLayout()
@@ -70,7 +93,7 @@ VOID KrEMainWndLayout()
 	RECT rect;
 	GetClientRect(KrEMainWindowHandle, &rect);
 	KrESetControlPosition(TabControlHandle, rect.left, rect.top, rect.right, rect.bottom);
-	//KrEmainWndTabControlOnLayout();
+	KrEmainWndTabControlOnLayout();
 }
 
 LRESULT CALLBACK KrEMainWndProc(
@@ -146,3 +169,5 @@ VOID KrEmainWndTabControlOnLayout()
 			KrESetControlPosition(NetworkListViewHandle, rect.left, rect.top, rect.right, rect.bottom);
 	}
 }
+
+

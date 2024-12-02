@@ -24,4 +24,10 @@ typedef BOOLEAN(*PPH_ENUM_PROCESSES_CALLBACK)(__in PSYSTEM_PROCESS_INFORMATION P
 
 PVOID KrEAllocate(__in SIZE_T Size);
 
+PVOID KrEFree(__in PVOID Memory);
+
+NTSTATUS KrEEnumProcesses(
+	__in PPH_ENUM_PROCESSES_CALLBACK CallBack,
+	__out_opt PBOOLEAN Found);
+
 #endif

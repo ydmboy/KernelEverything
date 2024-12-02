@@ -15,7 +15,8 @@ typedef LONG KPRIORITY;
 
 
 
-#define NTSUCCESS(Status)  ((NTSTATUS)(Status))>=0)
+#define NT_SUCCESS(Status)  (((NTSTATUS)(Status))>=0)
+
 
 
 // Sychronization enumerations
