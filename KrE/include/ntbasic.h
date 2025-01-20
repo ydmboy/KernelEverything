@@ -6,7 +6,6 @@
 #endif
 
 #include <phbase.h>
-
 // basic types
 
 typedef PVOID* PPVOID;

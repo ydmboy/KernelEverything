@@ -132,6 +132,35 @@ LRESULT CALLBACK KrEMainWndProc(
 
 }
 
+VOID KrEEnumerateProcessList()
+{
+	//PVOID processes;
+	//PSYSTEM_PROCESS_INFORMATION process;
+	//if(!NT_SUCCESS(KrEEnumProcesses(processes)))
+	//{
+	//	return;
+	//}
+	//process = KRE_FIRST_PROCESS(processes);
+
+	//do
+	//{
+
+	//	// add the value to the list item
+	//	PKRE_PROCESS_ITEM processItem;
+
+
+	//	if(process->UniqueProcessId == (HANDLE)0)
+	//	{
+	//		//RltInitUnicodeString();
+	//	}
+
+
+	//	
+	//} while (process = KRE_NEXT_PROCESS(process));
+
+
+}
+
 
 // ** name:    KrESetControlPosition
 // ** function:set all kinds of the window's the position include the Tab

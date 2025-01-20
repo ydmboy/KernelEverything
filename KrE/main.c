@@ -67,6 +67,7 @@ VOID KrEInitializeCommonControls()
     INITCOMMONCONTROLSEX icex;
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
     icex.dwICC = ICC_LISTVIEW_CLASSES;
+        //ICC_LINK_CLASS;
     InitCommonControlsEx(&icex);
 }
 

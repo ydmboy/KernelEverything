@@ -68,6 +68,9 @@
     <ClInclude Include="include\ntobapi.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ntrtl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="main.ico">

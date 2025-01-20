@@ -26,9 +26,9 @@ PVOID KrEAllocate(__in SIZE_T Size)
 		return HeapAlloc(KrEHeapHandle, 0, Size);
 }
 
-PVOID KrEFree(__in PVOID Memory)
+BOOL KrEFree(__in PVOID Memory)
 {
-	HeapFree(KrEHeapHandle,0,Memory);
+	return HeapFree(KrEHeapHandle,0,Memory);
 }
 
 
