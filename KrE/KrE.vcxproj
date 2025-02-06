@@ -143,12 +143,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="basesup.c" />
     <ClCompile Include="guisup.c" />
     <ClCompile Include="importLib.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mainwnd.c" />
     <ClCompile Include="ntimport.c" />
     <ClCompile Include="process.c" />
+    <ClCompile Include="ref.c" />
     <ClCompile Include="support.c" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +163,8 @@
     <ClInclude Include="include\ph.h" />
     <ClInclude Include="include\phbase.h" />
     <ClInclude Include="include\phgui.h" />
+    <ClInclude Include="include\ref.h" />
+    <ClInclude Include="include\refp.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

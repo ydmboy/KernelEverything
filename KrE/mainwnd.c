@@ -13,7 +13,6 @@ static INT NetworkTabIndex;
 
 
 
-// rt : true is successful
 BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 {
 	KrEMainWindowHandle = CreateWindow(KrEWindowClassName, KrE_APP_NAME, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, KrEInstanceHandle, NULL);

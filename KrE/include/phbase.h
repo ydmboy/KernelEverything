@@ -7,21 +7,21 @@
 #pragma once
 #endif
 
-#define WIN32_NO_STATUS
-#include <Windows.h>
-#undef WIN32_NO_STATUS
-#include <ntstatus.h>
-
+#include <ntwin.h>
 #include <ntimport.h>
-#include <wchar.h>
 
 #define KrE_APP_NAME (L"KernerlEverything")
+
+#define KrERaiseStatus(Status) RaiseException(Status,0,0,NULL)
 
 extern PWSTR KrEWindowClassName;
 extern HINSTANCE KrEInstanceHandle;
 extern HFONT KrEApplicationFont;
 extern HANDLE KrEHeapHandle;
 
+
+PVOID KrEAllocate(__in SIZE_T Size);
+PVOID KrEFree(__in PVOID Memory);
 
 
 #endif

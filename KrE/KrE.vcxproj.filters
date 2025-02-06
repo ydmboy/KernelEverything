@@ -36,6 +36,12 @@
     <ClCompile Include="ntimport.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ref.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="basesup.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\phbase.h">
@@ -66,6 +72,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\ntobapi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ref.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\refp.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

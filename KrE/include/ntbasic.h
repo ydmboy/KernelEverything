@@ -5,15 +5,17 @@
 #pragma once
 #endif
 
-#include <phbase.h>
-
+#include <ntwin.h>
 // basic types
 
 typedef PVOID* PPVOID;
 typedef ULONG LOGICAL;
 typedef LONG KPRIORITY;
 
-
+typedef struct _QUAD
+{
+	double DoNotUseThisField;
+}QUAD,*PQUAD,UQUAD,*PUQUAD;
 
 #define NT_SUCCESS(Status)  (((NTSTATUS)(Status))>=0)
 

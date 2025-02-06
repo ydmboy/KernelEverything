@@ -21,15 +21,18 @@ INT WINAPI wWinMain(
 {
     KrEInstanceHandle = hInstance;
     KrEHeapHandle = HeapCreate(0,0,0);
+
     if(!KrEHeapHandle)
     {
-        KrEShowError(NULL, "HeapCreate Error\n");
+        return 1;
     }
 
     KrERegisterWindowClass();
     KrEInitializeCommonControls();
 
     KrEInitializeImport();
+
+    KrEInitializeSystem();
 
     if(!KrEMainWndInitialization(nCmdShow))
     {
@@ -124,4 +127,8 @@ VOID KrEInitializeFont(__in HWND hWnd)
         }
     }
 }
-
+BOOLEAN KrEInitializeSystem()
+{
+    if (NT_SUCCESS(KrEInitializeRef()))
+        return FALSE;
+}

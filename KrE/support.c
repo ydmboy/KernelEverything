@@ -1,4 +1,5 @@
 #include <phgui.h>
+#include <wchar.h>
 
 
 INT KrEShowMessage_V(
@@ -21,14 +22,5 @@ INT KrEShowMessage_V(
 }
 
 
-PVOID KrEAllocate(__in SIZE_T Size)
-{
-		return HeapAlloc(KrEHeapHandle, 0, Size);
-}
-
-PVOID KrEFree(__in PVOID Memory)
-{
-	HeapFree(KrEHeapHandle,0,Memory);
-}
 
 

@@ -22,7 +22,6 @@ INT KrEShowMessage_V(
 
 typedef BOOLEAN(*PPH_ENUM_PROCESSES_CALLBACK)(__in PSYSTEM_PROCESS_INFORMATION Process);
 
-PVOID KrEAllocate(__in SIZE_T Size);
 
 PVOID KrEFree(__in PVOID Memory);
 

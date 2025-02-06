@@ -18,6 +18,9 @@ BOOLEAN KrEMainWndInitialization(__in INT ShowCommand);
 
 
 VOID KrEInitializeFont(__in HWND hWnd);
+BOOLEAN KrEInitializeSystem();
+
+
 
 VOID KrEInitializeCommonControls();
 

@@ -5,11 +5,11 @@
 #pragma once
 #endif
 
-#include <ntpsapi.h>
-#include <ntpebteb.h>
+#include <ntbasic.h>
 #include <ntexapi.h>
 #include <ntobapi.h>
-#include <ntbasic.h>
+#include <ntpsapi.h>
+#include <ntrtl.h>
 
 #ifdef NTIMPORT_PRIVATE
 #define EXT
