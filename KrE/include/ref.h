@@ -16,6 +16,9 @@
 struct _KRE_OBJECT_TYPE;
 typedef struct _KRE_OBJECT_TYPE *PKRE_OBJECT_TYPE;
 
+
+NTSTATUS KrEInitializeRef();
+
 /*
  *	the pointer to the deletion procedure
  */
@@ -28,6 +31,22 @@ NTSTATUS KrECreateObjectType(
 	__out PKRE_OBJECT_TYPE* ObjectType,
 	__in ULONG Flags,
 	__in PKRE_TYPE_DELETE_PROCEDURE DeleteProcedure
+);
+
+NTSTATUS KrECreateObject(
+	__out PVOID* Object,
+	__in SIZE_T ObjectSize,
+	__in ULONG Flags,
+	__in_opt PKRE_OBJECT_TYPE ObjectType,
+	__in_opt LONG AdditionalReferences
+);
+
+BOOLEAN KrEDereferenceObject(__in PVOID Object);
+
+LONG KrEDereferenceObjectEx(
+	__in PVOID Object,
+	__in LONG RefCount,
+	__in BOOLEAN DeferDelete
 );
 
 #endif

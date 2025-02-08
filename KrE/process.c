@@ -1,5 +1,11 @@
 #include <ph.h>
 
+PKRE_OBJECT_TYPE KrEProcessItemType;
+
+VOID KrEProcessItemDeleteProcedure(
+	__in PVOID Object,
+	__in ULONG Flags
+);
 
 NTSTATUS KrEEnumProcesses(
 	__in PPH_ENUM_PROCESSES_CALLBACK CallBack,
@@ -55,3 +61,44 @@ NTSTATUS KrEEnumProcesses(
 		*Found = FALSE;
 	return STATUS_SUCCESS;
 }
+
+
+BOOLEAN KrEInitializeProcessItem()
+{
+	return NT_SUCCESS(KrECreateObjectType(&KrEProcessItemType,
+		0,
+		KrEProcessItemDeleteProcedure
+	));
+
+	
+}
+
+
+BOOLEAN KrECreateProcessItem(
+	__in HANDLE ProcessId
+)
+{
+	PKRE_PROCESS_ITEM processItem;
+	if (!NT_SUCCESS(KrECreateObject(
+		&processItem,
+		sizeof(KRE_PROCESS_ITEM),
+		0,
+		KrEProcessItemType,
+		0
+	)))
+		return NULL;
+	memset(processItem, 0, sizeof(KRE_PROCESS_ITEM));
+	processItem->ProcessId = ProcessId;
+}
+
+VOID KrEProcessItemDeleteProcedure(
+	__in PVOID Object,
+	__in ULONG Flags
+	)
+{
+	PKRE_PROCESS_ITEM processItem = (PKRE_PROCESS_ITEM)Object;
+
+	if (processItem->ProcessName)
+		KrEDereferenceObject()
+}
+

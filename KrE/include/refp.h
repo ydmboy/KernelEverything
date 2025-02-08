@@ -7,9 +7,10 @@
 
 #include <ref.h>
 
-
+#define KrEObjectToObjectHeader(Object) \
+	((PKRE_OBJECT_HEADER)CONTAINING_RECORD((Object),KRE_OBJECT_HEADER,Body))
 #define KrEAddObjectHeaderSize(Size) ((Size)+FIELD_OFFSET(KRE_OBJECT_HEADER,Body))
-#define KrEObjectHeaderToObject(ObjectHeader) (&((KRE_OBJECT_HEADER)(ObjectHeader)->Body)
+#define KrEObjectHeaderToObject(ObjectHeader) (&((PKRE_OBJECT_HEADER)(ObjectHeader))->Body)
 
 typedef struct _KRE_OBJECT_HEADER *PKRE_OBJECT_HEADER;
 typedef struct _KRE_OBJECT_TYPE
@@ -37,7 +38,5 @@ typedef struct _KRE_OBJECT_HEADER
 PKRE_OBJECT_HEADER KrEAllocateObject(
 	__in SIZE_T ObjectSize
 );
-
-
 
 #endif

@@ -9,6 +9,7 @@
 
 #include <ntwin.h>
 #include <ntimport.h>
+#include <ref.h>
 
 #define KrE_APP_NAME (L"KernerlEverything")
 
@@ -20,8 +21,17 @@ extern HFONT KrEApplicationFont;
 extern HANDLE KrEHeapHandle;
 
 
+typedef struct _KRE_STRING
+{
+	UNICODE_STRING us;
+	WCHAR Buffer[1];
+}KRE_STRING,*PKRE_STRING;
+
+BOOLEAN KrEInitializeBase();
 PVOID KrEAllocate(__in SIZE_T Size);
 PVOID KrEFree(__in PVOID Memory);
+
+
 
 
 #endif

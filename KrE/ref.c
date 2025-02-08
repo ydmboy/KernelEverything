@@ -1,12 +1,17 @@
 #include <refp.h> 
 
 
-PKRE_OBJECT_TYPE KrEObjectTypeObject = NULL;
+PKRE_OBJECT_TYPE g_KrEObjectTypeObject = NULL;
 
 NTSTATUS KrEInitializeRef()
 {
 	NTSTATUS status = STATUS_SUCCESS;
-	status = KrECreateObjectType();
+	status = KrECreateObjectType(&g_KrEObjectTypeObject,0,NULL);
+	if (!NT_SUCCESS(status))
+		return status;
+
+	KrEObjectToObjectHeader(g_KrEObjectTypeObject)->Type = g_KrEObjectTypeObject;
+	g_KrEObjectTypeObject->NumberOfObject = 1;
 
 	return status;
 
@@ -14,7 +19,7 @@ NTSTATUS KrEInitializeRef()
 
 
 NTSTATUS KrECreateObjectType(
-	__out PKRE_OBJECT_TYPE* objectType,
+	__out PKRE_OBJECT_TYPE* ObjectType,
 	__in ULONG Flags,	// Is Flags parameter is useful??
 	__in PKRE_TYPE_DELETE_PROCEDURE DeleteProcedure
 )
@@ -25,11 +30,24 @@ NTSTATUS KrECreateObjectType(
 		return STATUS_INVALID_PARAMETER_3;
 	status = KrECreateObject(
 		&objectType,
-	
+		sizeof(KRE_OBJECT_TYPE),
+		0,
+		g_KrEObjectTypeObject,
+		0	
 	);
+	if (!NT_SUCCESS(status))
+		return status;
+
+	objectType->Flags = Flags;
+	objectType->DeleteProcedure = DeleteProcedure;
+	objectType->NumberOfObject = 0;
+
+	*ObjectType = objectType;
+
+	return status;
 }
 
-NTSTATUS KRECreateObejct(
+NTSTATUS KrECreateObject(
 	__out PVOID* Object,
 	__in SIZE_T ObjectSize,
 	__in ULONG Flags,
@@ -42,19 +60,27 @@ NTSTATUS KRECreateObejct(
 	// 1 | 0  allow passeage 
 	if ((Flags & KRE_OBJECT_VALID_FLAGS) != Flags)
 		return STATUS_INVALID_PARAMETER_3;
-	if (!ObjectType && KrEObjectTypeObject)
+	if (!ObjectType && g_KrEObjectTypeObject)
 		return STATUS_INVALID_PARAMETER_4;
 	if (AdditionalReferences < 0)
 		return STATUS_INVALID_PARAMETER_5;
 	objectHeader = KrEAllocateObject(ObjectSize);
 	if(!objectHeader)
 	{
-		if(Flags & KRE_OBJECT_RAISE_ON_FAIL)
-
+		if (Flags & KRE_OBJECT_RAISE_ON_FAIL)
+			KrERaiseStatus(STATUS_INSUFFICIENT_RESOURCES);
+		else
+			return STATUS_INSUFFICIENT_RESOURCES;
 	}
+	if (ObjectType)	// gg variable
+		InterlockedIncrement(&ObjectType->NumberOfObject);
 
+	objectHeader->RefCount = 1 + AdditionalReferences;
+	objectHeader->Flags = Flags;
+	objectHeader->Size = ObjectSize;
+	objectHeader->Type = ObjectType;
 
-	
+	*Object = KrEObjectHeaderToObject(objectHeader);
 }
 
 PKRE_OBJECT_HEADER KrEAllocateObject(
@@ -122,5 +148,27 @@ PKRE_OBJECT_HEADER KrEAllocateObejct(
 	return KrEAllocate(KrEAddObjectHeaderSize(ObjectSize));
 }
 
+
+
+BOOLEAN KrEDereferenceObject(__in PVOID Object)
+{
+	return KrEDereferenceObjectEx();
+}
+
+LONG KrEDereferenceObjectEx(
+	__in PVOID Object,
+	__in LONG RefCount,
+	__in BOOLEAN DeferDelete
+)
+{
+	KRE_OBJECT_HEADER objectHeader;
+	LONG oldRefCount;
+
+	if (RefCount < 0)
+		KrERaiseStatus(STATUS_INVALID_PARAMETER_2);
+	o
+
+
+}
 
 
