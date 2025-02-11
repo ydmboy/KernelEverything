@@ -109,7 +109,7 @@ NTSTATUS KrECreateObject(
 	objectHeader->Size = ObjectSize;
 	objectHeader->Type = ObjectType;
 
-	*Object = KrE
+	*Object = KrECreate*****
 
 
 
