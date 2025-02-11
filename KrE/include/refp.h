@@ -9,7 +9,7 @@
 
 
 #define KrEAddObjectHeaderSize(Size) ((Size)+FIELD_OFFSET(KRE_OBJECT_HEADER,Body))
-#define KrEObjectHeaderToObject(ObjectHeader) (&((KRE_OBJECT_HEADER)(ObjectHeader)->Body)
+#define KrEObjectHeaderToObject(ObjectHeader) (&((PKRE_OBJECT_HEADER)(ObjectHeader))->Body)
 
 typedef struct _KRE_OBJECT_HEADER *PKRE_OBJECT_HEADER;
 typedef struct _KRE_OBJECT_TYPE

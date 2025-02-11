@@ -49,10 +49,19 @@ NTSTATUS KRECreateObejct(
 	objectHeader = KrEAllocateObject(ObjectSize);
 	if(!objectHeader)
 	{
-		if(Flags & KRE_OBJECT_RAISE_ON_FAIL)
-
+		if (Flags & KRE_OBJECT_RAISE_ON_FAIL)
+			KrERaiseStatus(STATUS_INSUFFICIENT_RESOURCES);
+		else
+			return STATUS_INSUFFICIENT_RESOURCES;
 	}
+	if (ObjectType)
+		InterlockedIncrement(&ObjectType->NumberOfObject);
 
+	objectHeader->RefCount = 1 + AdditionalReferences;
+	objectHeader->Flags = Flags;
+	objectHeader->Size = ObjectSize;
+	objectHeader->Type = ObjectType;
+	*Object = KrEObjectHeaderToObject(objectHeader);
 
 	
 }
