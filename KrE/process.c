@@ -99,6 +99,10 @@ VOID KrEProcessItemDeleteProcedure(
 	PKRE_PROCESS_ITEM processItem = (PKRE_PROCESS_ITEM)Object;
 
 	if (processItem->ProcessName)
-		KrEDereferenceObject()
+		KrEDereferenceObject(processItem->ProcessName);
 }
 
+BOOLEAN KrEDereferenceObjectDeferDelete(__in PVOID Object)
+{
+	return 
+}

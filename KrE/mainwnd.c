@@ -65,7 +65,7 @@ VOID KrEMainWndCreateTab()
 	
 
 	ProcessListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_PROCESSLV);
-	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER| LVS_EX_GRIDLINES,-1);
+	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT| LVS_EX_DOUBLEBUFFER| LVS_EX_GRIDLINES,-1);
 
 
 	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Process Name");
@@ -73,13 +73,13 @@ VOID KrEMainWndCreateTab()
 
 
 	ServiceListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_SERVICELV);
-	ListView_SetExtendedListViewStyleEx(ServiceListViewHandle, LVS_EX_FULLROWSELECT, LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES,-1);
+	ListView_SetExtendedListViewStyleEx(ServiceListViewHandle, LVS_EX_FULLROWSELECT| LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES,-1);
 	KrEAddListViewColumn(ServiceListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Service");
 
 
 
 	NetworkListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_NETWORKLV);
-	ListView_SetExtendedListViewStyle(NetworkListViewHandle, LVS_EX_FULLROWSELECT|
+	ListView_SetExtendedListViewStyleEx(NetworkListViewHandle, LVS_EX_FULLROWSELECT|
 		LVS_EX_DOUBLEBUFFER,-1);
 	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"netWork");
 
