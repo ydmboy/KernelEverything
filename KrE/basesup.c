@@ -19,5 +19,5 @@ BOOLEAN KrEInitializeBase()
 
 PVOID KrEFree(__in PVOID Memory)
 {
-	HeapFree(KrEHeapHandle, 0, Memory);
+	RtlFreeHeap(KrEHeapHandle, 0, Memory);
 }

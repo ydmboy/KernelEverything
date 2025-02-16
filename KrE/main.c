@@ -135,6 +135,5 @@ BOOLEAN KrEInitializeSystem()
         return FALSE;
     if (!KrEInitializeProcessItem())
         return FALSE;
-
-
+    return TRUE;
 }

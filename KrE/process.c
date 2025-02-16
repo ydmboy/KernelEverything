@@ -104,5 +104,5 @@ VOID KrEProcessItemDeleteProcedure(
 
 BOOLEAN KrEDereferenceObjectDeferDelete(__in PVOID Object)
 {
-	return 
+	return KrEDereferenceObjectEx(Object,1,TRUE) == 0;
 }

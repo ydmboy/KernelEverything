@@ -39,4 +39,14 @@ PKRE_OBJECT_HEADER KrEAllocateObject(
 	__in SIZE_T ObjectSize
 );
 
-#endif
+NTSTATUS KrEDeferDeleteObjectRoutine(
+	__in PVOID Parameter
+);
+
+VOID KrEFreeObject(
+	__in PKRE_OBJECT_HEADER ObjectHeader
+);
+
+VOID KrEDeferDeleteObject(__in PKRE_OBJECT_HEADER ObjectHeader);
+
+#endif;

@@ -2,6 +2,7 @@
 
 
 PKRE_OBJECT_TYPE KrEObjectTypeObject = NULL;
+PKRE_OBJECT_HEADER KrEObjectNextToFree = NULL;
 
 NTSTATUS KrEInitializeRef()
 {
@@ -60,7 +61,7 @@ PKRE_OBJECT_HEADER KrEAllocateObject(
 
 
 NTSTATUS KrECreateObject(
-	__out PVOID * Object,
+	__out PVOID* Object,
 	__in  SIZE_T ObjectSize,
 	__in  ULONG Flags,
 	__in_opt PKRE_OBJECT_TYPE ObjectType,
@@ -86,14 +87,14 @@ NTSTATUS KrECreateObject(
 	 * include the object header and the object storage
 	 */
 	objectHeader = KrEAllocateObject(ObjectSize);
-	if(!objectHeader)
+	if (!objectHeader)
 	{
 		if (Flags & KRE_OBJECT_RAISE_ON_FAIL)
 			KrERaiseStatus(STATUS_INSUFFICIENT_RESOURCES);  //  exit the app
 		else
 			return STATUS_INSUFFICIENT_RESOURCES;
 	}
-	if(ObjectType)
+	if (ObjectType)
 	{
 		InterlockedIncrement(&ObjectType->NumberOfObject);
 	}
@@ -115,5 +116,91 @@ PKRE_OBJECT_HEADER KrEAllocateObejct(
 	return KrEAllocate(KrEAddObjectHeaderSize(ObjectSize));
 }
 
+LONG KrEDereferenceObjectEx(
+	__in PVOID Object,
+	__in LONG RefCount,
+	__in BOOLEAN DeferDelete
+)
+{
+	PKRE_OBJECT_HEADER objectHeader;
+	LONG oldRefCount;
 
+	if (RefCount < 0)
+		KrERaiseStatus(STATUS_INVALID_PARAMETER_2);
+
+	objectHeader = KrEObjectToObjectHeader(Object);
+
+	oldRefCount = InterlockedExchangeAdd(&objectHeader->RefCount, -RefCount);
+
+	if (oldRefCount - RefCount == 0)
+	{
+		if (DeferDelete)
+			KrEDeferDeleteObject(objectHeader);
+		else
+			KrEFreeObject(objectHeader);
+	}
+
+	return oldRefCount - RefCount;
+
+}
+
+VOID KrEDeferDeleteObject(__in PKRE_OBJECT_HEADER ObjectHeader)
+{
+	PKRE_OBJECT_HEADER nextToFree;
+
+	while(TRUE)
+	{
+		nextToFree = KrEObjectNextToFree;
+		ObjectHeader->NextToFree = nextToFree;
+
+		if (InterlockedCompareExchangePointer(
+			&KrEObjectNextToFree,
+			ObjectHeader,
+			nextToFree) == nextToFree)
+			break; // success return
+	}
+	if (!nextToFree)
+		QueueUserWorkItem(KrEDeferDeleteObjectRoutine, NULL, 0);
+}
+
+NTSTATUS KrEDeferDeleteObjectRoutine(
+	__in PVOID Parameter		// unused
+)
+{
+	PKRE_OBJECT_HEADER objectHeader = NULL;
+
+	while(TRUE)
+	{
+		objectHeader = InterlockedExchangePointer(&KrEObjectNextToFree,objectHeader);
+		if (objectHeader)
+		{
+			KrEFreeObject(objectHeader);
+			objectHeader = objectHeader->NextToFree;
+		}
+		else
+			break;
+	}
+	return STATUS_SUCCESS;
+}
+
+VOID KrEFreeObject(
+	__in PKRE_OBJECT_HEADER ObjectHeader
+)
+{
+	InterlockedDecrement(ObjectHeader->Type->NumberOfObject);
+
+	if(ObjectHeader->Type->DeleteProcedure)
+	{
+		ObjectHeader->Type->DeleteProcedure(
+			KrEObjectHeaderToObject(ObjectHeader),
+			ObjectHeader->Flags
+		);
+	}
+	KrEFree(ObjectHeader);
+}
+
+BOOLEAN KrEDereferenceObject(__in PVOID Object)
+{
+	return KrEDereferenceObjectEx(Object, 1, FALSE) == 0;
+}
 
