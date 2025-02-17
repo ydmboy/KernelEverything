@@ -8,4 +8,14 @@
 #define RtlAllocateHeap HeapAlloc
 #define RtlFreeHeap		HeapFree
 
+VOID FORCEINLIEN RtlInitUnicodeString(
+	__out PUNICODE_STRING DestinationString,
+	__in PWSTR SourceString
+)
+{
+	DestinationString->MaximumLength = DestinationString->Length = wcslen(SourceString) * sizeof(WCHAR);
+	DestinationString->Buffer = SourceString;
+}
+
+
 #endif

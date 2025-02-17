@@ -29,7 +29,7 @@ typedef struct _KRE_STRING
 
 BOOLEAN KrEInitializeBase();
 PVOID KrEAllocate(__in SIZE_T Size);
-PVOID KrEFree(__in PVOID Memory);
+VOID KrEFree(__in PVOID Memory);
 
 
 

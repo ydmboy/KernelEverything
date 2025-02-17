@@ -30,23 +30,25 @@ BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 	return TRUE;
 }
 
-BOOLEAN ProcessEnumCallBack(PSYSTEM_PROCESS_INFORMATION Process)
+VOID EnumerateProcesses()
 {
-	PWSTR buffer;
-	buffer = KrEAllocate(Process->ImageName.Length + sizeof(WCHAR));
-	memcpy(buffer, Process->ImageName.Buffer, Process->ImageName.Length);
-	buffer[Process->ImageName.Length / sizeof(WCHAR)] = 0;
+	PVOID processes;
+	PSYSTEM_PROCESS_INFORMATION process;
 
-	KrEAddListViewItem(
-		ProcessListViewHandle,
-		MAXINT,
-		buffer
-	);
+	if (!NT_SUCCESS(KrEEnumProcesses(&processes)))
+		return;
 
-	
+	process = KRE_FIRST_PROCESS(processes);
 
+	do
+	{
+		PKRE_PROCESS_ITEM processItem;
+		if (process->UniqueProcessId == (HANDLE)0)
+			RtlInitUnicodeString(&process->ImageName,L"System Id;le Process");
+		processItem = KrECreateProcessItem(process->UniqueProcessId);
+		processItem->ProcessName = KrECreateStringEx
 
-	return FALSE;  //  this is where bug is likely to occur. 
+	} while (process = KRE_NEXT_PROCESS(process));
 }
 
 

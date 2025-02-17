@@ -17,7 +17,7 @@ BOOLEAN KrEInitializeBase()
 	return RtlAllocateHeap(KrEHeapHandle, 0, Size);
 }
 
-PVOID KrEFree(__in PVOID Memory)
+VOID KrEFree(__in PVOID Memory)
 {
-	RtlFreeHeap(KrEHeapHandle, 0, Memory);
+	return; RtlFreeHeap(KrEHeapHandle, 0, Memory);
 }
