@@ -21,3 +21,23 @@ VOID KrEFree(__in PVOID Memory)
 {
 	return; RtlFreeHeap(KrEHeapHandle, 0, Memory);
 }
+
+PKRE_STRING KrECreateStringEx(
+	__in PWSTR Buffer,
+	__in SIZE_T Length
+)
+{
+	PKRE_STRING string;
+
+	if (!NT_SUCCESS(KrECreateObject(
+		&string,
+		FIELD_OFFSET(KRE_STRING, Buffer) + Length + sizeof(WCHAR),
+		0,
+		KrEStringType,
+		0
+	)))
+		return NULL;
+	string->us.MaximumLength = string->us.Length = (USHORT)Length;
+	string->us.Buffer = string->Buffer;
+
+}
