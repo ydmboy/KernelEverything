@@ -39,5 +39,10 @@ PKRE_STRING KrECreateStringEx(
 		return NULL;
 	string->us.MaximumLength = string->us.Length = (USHORT)Length;
 	string->us.Buffer = string->Buffer;
+	memcpy(string->Buffer, Buffer, Length);
+	string->Buffer[Length / sizeof(WCHAR)] = 0;
+
+	return string;
+
 
 }

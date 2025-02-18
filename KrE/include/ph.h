@@ -52,7 +52,7 @@ typedef struct _KRE_PROCESS_ITEM
 } KRE_PROCESS_ITEM, * PKRE_PROCESS_ITEM;
 
 
-BOOLEAN KrECreateProcessItem(
+PKRE_PROCESS_ITEM KrECreateProcessItem(
 	__in HANDLE ProcessId
 );
 

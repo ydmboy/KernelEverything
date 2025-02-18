@@ -40,7 +40,7 @@ NTSTATUS KrECreateObjectType(
 		KrEObjectTypeObject,
 		0
 	);
-	if (NT_SUCCESS(status))
+	if (!NT_SUCCESS(status))
 		return status;
 
 	objectType->Flags = Flags;
@@ -187,7 +187,7 @@ VOID KrEFreeObject(
 	__in PKRE_OBJECT_HEADER ObjectHeader
 )
 {
-	InterlockedDecrement(ObjectHeader->Type->NumberOfObject);
+	InterlockedDecrement(&ObjectHeader->Type->NumberOfObject);
 
 	if(ObjectHeader->Type->DeleteProcedure)
 	{

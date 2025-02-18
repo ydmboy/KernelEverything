@@ -39,6 +39,8 @@ NTSTATUS KrEEnumProcesses(
 		}
 	}
 
+	*Processes = buffer;
+
 	return STATUS_SUCCESS;
 }
 
@@ -54,7 +56,7 @@ BOOLEAN KrEInitializeProcessItem()
 }
 
 
-BOOLEAN KrECreateProcessItem(
+PKRE_PROCESS_ITEM KrECreateProcessItem(
 	__in HANDLE ProcessId
 )
 {

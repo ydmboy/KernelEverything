@@ -79,9 +79,11 @@ INT KrEAddListViewColumn(
 );
 
 
-INT KrEAddListViewItem(HWND ListViewHandle,
+INT KrEAddListViewItem(
+	HWND ListViewHandle,
 	INT Index,
-	PWSTR Text
+	PWSTR Text,
+	PVOID Param
 );
 
 

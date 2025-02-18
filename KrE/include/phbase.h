@@ -31,6 +31,11 @@ BOOLEAN KrEInitializeBase();
 PVOID KrEAllocate(__in SIZE_T Size);
 VOID KrEFree(__in PVOID Memory);
 
+PKRE_STRING KrECreateStringEx(
+	__in PWSTR Buffer,
+	__in SIZE_T Length
+);
+
 
 
 

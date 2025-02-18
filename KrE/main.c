@@ -129,7 +129,7 @@ VOID KrEInitializeFont(__in HWND hWnd)
 }
 BOOLEAN KrEInitializeSystem()
 {
-    if (NT_SUCCESS(KrEInitializeRef()))
+    if (!NT_SUCCESS(KrEInitializeRef()))
         return FALSE;
     if (!KrEInitializeBase())
         return FALSE;

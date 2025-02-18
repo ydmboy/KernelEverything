@@ -12,6 +12,8 @@ static INT ServiceTabIndex;
 static INT NetworkTabIndex;
 
 
+VOID KrEmainWndTabControlOnSelectionChanged();
+VOID KrEMainWndControlOnNotify(__in LPNMHDR Header);
 
 BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 {
@@ -44,11 +46,20 @@ VOID EnumerateProcesses()
 	{
 		PKRE_PROCESS_ITEM processItem;
 		if (process->UniqueProcessId == (HANDLE)0)
-			RtlInitUnicodeString(&process->ImageName,L"System Id;le Process");
+			RtlInitUnicodeString(&process->ImageName, L"System Idle Process");
 		processItem = KrECreateProcessItem(process->UniqueProcessId);
-		processItem->ProcessName = KrECreateStringEx
+		processItem->ProcessName = KrECreateStringEx(process->ImageName.Buffer, process->ImageName.Length);
+
+		KrEAddListViewItem(
+			ProcessListViewHandle,
+			MAXINT,
+			processItem->ProcessName->Buffer,
+			processItem
+		);
 
 	} while (process = KRE_NEXT_PROCESS(process));
+
+	KrEFree(processes);
 }
 
 
@@ -64,29 +75,21 @@ VOID KrEMainWndCreateTab()
 	KrEAddTabControlTab(TabControlHandle, 0, L"Processes");
 	KrEAddTabControlTab(TabControlHandle, 1, L"Services");
 	KrEAddTabControlTab(TabControlHandle, 2, L"NetWork");
-	
 
 	ProcessListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_PROCESSLV);
-	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT| LVS_EX_DOUBLEBUFFER| LVS_EX_GRIDLINES,-1);
-
-
+	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES, -1);
 	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Process Name");
 
-
-
 	ServiceListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_SERVICELV);
-	ListView_SetExtendedListViewStyleEx(ServiceListViewHandle, LVS_EX_FULLROWSELECT| LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES,-1);
+	ListView_SetExtendedListViewStyleEx(ServiceListViewHandle, LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES, -1);
 	KrEAddListViewColumn(ServiceListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Service");
 
-
-
 	NetworkListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_NETWORKLV);
-	ListView_SetExtendedListViewStyleEx(NetworkListViewHandle, LVS_EX_FULLROWSELECT|
-		LVS_EX_DOUBLEBUFFER,-1);
-	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"netWork");
+	ListView_SetExtendedListViewStyleEx(NetworkListViewHandle, LVS_EX_FULLROWSELECT |
+		LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES , -1);
+	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"NetWork");
 
-	KrEEnumProcesses(ProcessEnumCallBack, NULL);
-
+	//EnumerateProcesses();
 }
 
 VOID KrEMainWndLayout()
@@ -105,28 +108,41 @@ LRESULT CALLBACK KrEMainWndProc(
 {
 	switch (uMsg)
 	{
-	case WM_COMMAND:
-	{
+		case WM_COMMAND:
+		{
 
-	}
-	break;
-	case WM_PAINT:
-	{
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
-	}
-	break;
-	case WM_SIZE:
-	{
-		KrEMainWndLayout();
-	}
-	break;
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-	}
-	break;
-	default:
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		}
+		break;
+		case WM_PAINT:
+		{
+			//HDC hdc;
+			//PAINTSTRUCT paintStruct;
+			//hdc = BeginPaint(hWnd, &paintStruct);
+			////TextOut(hdc, 10, 10, L"Hello, Windows!", 15);
+			//EndPaint(hWnd,&paintStruct);
+			//return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		}
+		break;
+		case WM_SIZE:
+		{
+			KrEMainWndLayout();
+			InvalidateRect(hWnd, NULL, TRUE);
+		}
+		break;
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+		}
+		break;
+		case WM_NOTIFY:
+		{
+			LPNMHDR header = (LPNMHDR)lParam;
+			if (header->hwndFrom == TabControlHandle)
+				KrEMainWndControlOnNotify(header);
+		}
+		break;
+		default:
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -144,7 +160,7 @@ VOID FORCEINLINE KrESetControlPosition(
 	INT Bottom
 )
 {
-	SetWindowPos(Handle, NULL, Left, Top, Right-Left, Bottom-Top, SWP_NOACTIVATE | SWP_NOREDRAW |SWP_NOZORDER);
+	SetWindowPos(Handle, NULL, Left, Top, Right - Left, Bottom - Top, SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOZORDER);
 }
 
 VOID KrEmainWndTabControlOnLayout()
@@ -157,18 +173,33 @@ VOID KrEmainWndTabControlOnLayout()
 
 	selectedIndex = TabCtrl_GetCurSel(TabControlHandle);
 
-	if(selectedIndex == ProcessesTabIndex)
+	if (selectedIndex == ProcessesTabIndex)
 	{
 		KrESetControlPosition(ProcessListViewHandle, rect.left, rect.top, rect.right, rect.bottom);
 	}
-	else if(selectedIndex == ServiceTabIndex)
+	else if (selectedIndex == ServiceTabIndex)
 	{
 		KrESetControlPosition(ServiceListViewHandle, rect.left, rect.top, rect.right, rect.bottom);
 	}
-	else if(selectedIndex == NetworkTabIndex)
+	else if (selectedIndex == NetworkTabIndex)
 	{
-			KrESetControlPosition(NetworkListViewHandle, rect.left, rect.top, rect.right, rect.bottom);
+		KrESetControlPosition(NetworkListViewHandle, rect.left, rect.top, rect.right, rect.bottom);
 	}
 }
 
+VOID KrEMainWndControlOnNotify(
+	__in LPNMHDR Header
+)
+{
+	if (Header->code == TCN_SELCHANGE)
+		KrEmainWndTabControlOnSelectionChanged();
+}
+
+VOID KrEmainWndTabControlOnSelectionChanged()
+{
+	INT selectedIndex = TabCtrl_GetCurSel(TabControlHandle);
+	ShowWindow(ProcessListViewHandle, selectedIndex == ProcessesTabIndex ? SW_SHOW : SW_HIDE);
+	ShowWindow(ServiceListViewHandle, selectedIndex == ServiceTabIndex ? SW_SHOW : SW_HIDE);
+	ShowWindow(NetworkListViewHandle, selectedIndex == NetworkTabIndex ? SW_SHOW : SW_HIDE);
+}
 
