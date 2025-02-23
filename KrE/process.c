@@ -90,3 +90,83 @@ BOOLEAN KrEDereferenceObjectDeferDelete(__in PVOID Object)
 {
 	return KrEDereferenceObjectEx(Object,1,TRUE) == 0;
 }
+
+NTSTATUS KrEOpenProcess(
+	__out PHANDLE ProcessHandle,
+	__in ACCESS_MASK DesiredAccess,
+	__in HANDLE ProcessId
+)
+{
+	OBJECT_ATTRIBUTES objectAttributes = { 0 };
+	CLIENT_ID clientId;
+
+	clientId.UniqueProcess = ProcessId;
+	clientId.UniqueThread = NULL;
+
+	return NtOpenProcess(
+		ProcessHandle,
+		DesiredAccess,
+		&objectAttributes,
+		&clientId
+	);
+}
+
+NTSTATUS KrEOpenThread(
+	__out PHANDLE ThreadHandle,
+	__in ACCESS_MASK DesiredAccess,
+	__in HANDLE ThreadId
+)
+{
+	OBJECT_ATTRIBUTES objectAttributes = { 0 };
+	CLIENT_ID clientId;
+
+	clientId.UniqueProcess = NULL;
+	clientId.UniqueThread = ThreadId;
+
+	return NtOpenThread(
+		ThreadHandle,
+		DesiredAccess,
+		&objectAttributes,
+		&clientId);
+}
+
+NTSTATUS KrEGetTokenUser(
+	__in HANDLE TokenHandle,
+	__out PTOKEN_USER* User
+)
+{
+	NTSTATUS status;
+	PTOKEN_USER user;
+	ULONG returnLength;
+
+	status = NtQueryInformationToken(
+		TokenHandle,
+		TokenUser,//typedef enum _TOKEN_INFORMATION_CLASS ->    TokenUser = 1,
+		NULL,
+		0,
+		&returnLength);
+	user = KrEAllocate(returnLength);
+	status = NtQueryInformationToken(
+		TokenHandle,
+		TokenUser,//typedef enum _TOKEN_INFORMATION_CLASS ->    TokenUser = 1,
+		user,
+		returnLength,
+		&returnLength);
+
+	if (NT_SUCCESS(status))
+		*User = user;
+	else
+	{
+		if (user)
+			KrEFree(user);
+	}
+	return status;
+}
+
+NTSTATUS KrEOpenProcessToken(
+	__out PHANDLE 
+)
+{
+
+}
+

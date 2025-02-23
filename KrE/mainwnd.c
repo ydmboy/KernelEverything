@@ -1,5 +1,7 @@
 #include <phgui.h>
-#include <commctrl.h>
+#include <CommCtrl.h>
+#include <wchar.h>
+
 HWND KrEMainWindowHandle;
 static HWND TabControlHandle;
 
@@ -21,9 +23,7 @@ BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 	if (!KrEMainWindowHandle)
 		return FALSE;
 
-
 	KrEInitializeFont(KrEMainWindowHandle);
-
 
 	KrEMainWndCreateTab();
 	KrEMainWndLayout();
@@ -45,20 +45,21 @@ VOID EnumerateProcesses()
 	do
 	{
 		PKRE_PROCESS_ITEM processItem;
+		INT lvItemIndex;
 		if (process->UniqueProcessId == (HANDLE)0)
 			RtlInitUnicodeString(&process->ImageName, L"System Idle Process");
 		processItem = KrECreateProcessItem(process->UniqueProcessId);
 		processItem->ProcessName = KrECreateStringEx(process->ImageName.Buffer, process->ImageName.Length);
+		_snwprintf_s(processItem->ProcessIdString, KRE_INT_STR_LEN_1, KRE_INT_STR_LEN, L"%d", processItem->ProcessId);
 
-		KrEAddListViewItem(
+		lvItemIndex = KrEAddListViewItem(
 			ProcessListViewHandle,
 			MAXINT,
 			processItem->ProcessName->Buffer,
 			processItem
 		);
-
+		KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,1,processItem->ProcessIdString);
 	} while (process = KRE_NEXT_PROCESS(process));
-
 	KrEFree(processes);
 }
 
@@ -72,9 +73,10 @@ VOID KrEMainWndCreateTab()
 		return;
 
 	//add  the  subtab
-	KrEAddTabControlTab(TabControlHandle, 0, L"Processes");
-	KrEAddTabControlTab(TabControlHandle, 1, L"Services");
-	KrEAddTabControlTab(TabControlHandle, 2, L"NetWork");
+
+	ProcessesTabIndex = KrEAddTabControlTab(TabControlHandle, 0, L"Processes");
+	ServiceTabIndex = KrEAddTabControlTab(TabControlHandle, 1, L"Services");
+	NetworkTabIndex = KrEAddTabControlTab(TabControlHandle, 2, L"NetWork");
 
 	ProcessListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_PROCESSLV);
 	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES, -1);
@@ -87,9 +89,15 @@ VOID KrEMainWndCreateTab()
 	NetworkListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_NETWORKLV);
 	ListView_SetExtendedListViewStyleEx(NetworkListViewHandle, LVS_EX_FULLROWSELECT |
 		LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES , -1);
+
+
 	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"NetWork");
 
-	//EnumerateProcesses();
+
+	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"name");
+	KrEAddListViewColumn(ProcessListViewHandle, 1, 1, 1, LVCFMT_LEFT, 80, L"pid");
+
+	EnumerateProcesses();
 }
 
 VOID KrEMainWndLayout()
@@ -201,5 +209,6 @@ VOID KrEmainWndTabControlOnSelectionChanged()
 	ShowWindow(ProcessListViewHandle, selectedIndex == ProcessesTabIndex ? SW_SHOW : SW_HIDE);
 	ShowWindow(ServiceListViewHandle, selectedIndex == ServiceTabIndex ? SW_SHOW : SW_HIDE);
 	ShowWindow(NetworkListViewHandle, selectedIndex == NetworkTabIndex ? SW_SHOW : SW_HIDE);
+	KrEmainWndTabControlOnLayout();
 }
 

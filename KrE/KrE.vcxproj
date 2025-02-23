@@ -160,6 +160,7 @@
     <ClInclude Include="include\ntobapi.h" />
     <ClInclude Include="include\ntpebteb.h" />
     <ClInclude Include="include\ntpsapi.h" />
+    <ClInclude Include="include\ntseapi.h" />
     <ClInclude Include="include\ph.h" />
     <ClInclude Include="include\phbase.h" />
     <ClInclude Include="include\phgui.h" />

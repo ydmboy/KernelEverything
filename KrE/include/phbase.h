@@ -15,17 +15,20 @@
 
 #define KrERaiseStatus(Status) RaiseException(Status,0,0,NULL)
 
+#define KRE_INT_STR_LEN 10
+#define KRE_INT_STR_LEN_1 (KRE_INT_STR_LEN+1)	
+
 extern PWSTR KrEWindowClassName;
 extern HINSTANCE KrEInstanceHandle;
 extern HFONT KrEApplicationFont;
 extern HANDLE KrEHeapHandle;
-
 
 typedef struct _KRE_STRING
 {
 	UNICODE_STRING us;
 	WCHAR Buffer[1];
 }KRE_STRING,*PKRE_STRING;
+
 
 BOOLEAN KrEInitializeBase();
 PVOID KrEAllocate(__in SIZE_T Size);

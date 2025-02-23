@@ -60,13 +60,10 @@ VOID FORCEINLINE KrESetControlPosition(
 VOID KrEMainWndLayout();
 VOID KrEmainWndTabControlOnLayout();
 
-
-
 HWND KrECreateListViewControl(
 	HWND ParentHandle,
 	INT_PTR Id
 );
-
 
 INT KrEAddListViewColumn(
 	HWND ListViewHandle,
@@ -78,7 +75,6 @@ INT KrEAddListViewColumn(
 	PWSTR Text
 );
 
-
 INT KrEAddListViewItem(
 	HWND ListViewHandle,
 	INT Index,
@@ -86,7 +82,12 @@ INT KrEAddListViewItem(
 	PVOID Param
 );
 
-
+VOID KrESetListViewSubItem(
+	HWND ListViewHandle,
+	INT Index,
+	PWSTR Text,
+	PVOID Param
+);
 
 
 #endif

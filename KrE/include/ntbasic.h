@@ -45,7 +45,7 @@ typedef struct _OBJECT_ATTRIBUTES
 	ULONG Atrributes;
 	PVOID SecurityDescriptor;
 	PVOID SecurityQualityOfService;
-} OBJECT_ATTRUBUTES,*POBJECT_ATTRIBUTES;
+} OBJECT_ATTRIBUTES,*POBJECT_ATTRIBUTES;
 
 
 typedef struct _CLIENT_ID

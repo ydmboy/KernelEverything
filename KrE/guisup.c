@@ -81,3 +81,20 @@ INT KrEAddListViewItem(
 
 
 }
+
+VOID KrESetListViewSubItem(
+	HWND ListViewHandle,
+	INT Index,
+	INT SubItemIndex,
+	PWSTR Text
+)
+{
+	LVITEM item;
+	item.mask = LVIF_TEXT ;
+	item.iItem = Index;
+	item.iSubItem = SubItemIndex;
+	item.pszText = Text;
+
+	ListView_SetItem(ListViewHandle,&item);
+
+}

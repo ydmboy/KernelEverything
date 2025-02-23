@@ -80,6 +80,9 @@
     <ClInclude Include="include\refp.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\ntseapi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="main.ico">
