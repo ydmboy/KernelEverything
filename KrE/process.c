@@ -164,9 +164,108 @@ NTSTATUS KrEGetTokenUser(
 }
 
 NTSTATUS KrEOpenProcessToken(
-	__out PHANDLE 
+	__out PHANDLE TokenHandle,
+	__in ACCESS_MASK DesiredAccess,
+	__in HANDLE ProcessHandle
 )
 {
+	return NtOpenProcessToken(
+		ProcessHandle,
+		DesiredAccess,
+		TokenHandle
+	);
+}
+
+BOOLEAN KrESetTokenPrivilege(
+	__in HANDLE TokenHandle,
+	__in_opt PWSTR PrivilegeName,
+	__in_opt PLUID privilegeLuid,
+	__in ULONG Attributes
+)
+{
+	TOKEN_PRIVILEGES privileges = { 0 };
+
+	privileges.PrivilegeCount = 1;
+	privileges.Privileges[0].Attributes = Attributes;
+
+	if (privilegeLuid)
+	{
+		privileges.Privileges[0].Luid = *privilegeLuid;
+	}
+	else if (PrivilegeName)
+	{
+		if (!LookupPrivilegeValue(
+			NULL,
+			PrivilegeName,
+			&privileges.Privileges[0].Luid
+		))
+			return FALSE;
+	}
+	else
+		return FALSE;
+	if (!AdjustTokenPrivileges(
+		TokenHandle,
+		FALSE,
+		&privileges,
+		0,
+		NULL,
+		NULL
+	))
+		return FALSE;
+	if (GetLastError() == ERROR_NOT_ALL_ASSIGNED)
+		return FALSE;
+	return TRUE;
+}
+
+BOOLEAN KrELookupSid(
+	__in PSID Sid,
+	__out_opt KRE_STRING *Name,
+	__out_opt KRE_STRING *DomainName,
+	__out_opt PSID_NAME_USE NameUse
+)
+{
+	PVOID nameBuffer;
+	ULONG nameBufferSize;
+	PVOID domainNameBuffer;
+	ULONG domainNameBufferSize;
+	SID_NAME_USE nameUse;
+
+	nameBufferSize = 0x40;
+	nameBuffer = KrEAllocate(nameBufferSize * 2);
+	domainNameBufferSize = 0x40;
+	domainNameBuffer = KrEAllocate(domainNameBufferSize * 2);
+
+	if (!LookupAccountSid(
+		NULL,
+		Sid,
+		nameBuffer,
+		&nameBufferSize,
+		domainNameBuffer,
+		&domainNameBufferSize,
+		&nameUse
+	))
+	{
+		KrEFree(nameBuffer);
+		nameBuffer = KrEAllocate(nameBufferSize * 2);
+		KrEFree(domainNameBuffer);
+		domainNameBuffer = KrEAllocate(domainNameBufferSize*2);
+
+		if (!LookupAccountSid(
+			NULL,
+			Sid,
+			nameBuffer,
+			&nameBufferSize,
+			domainNameBuffer,
+			&domainNameBufferSize,
+			&nameUse
+		))
+		{
+			KrEFree(nameBuffer);
+			KrEFree(domainNameBuffer);
+			return FALSE;
+		}
+	}
+
 
 }
 

@@ -101,4 +101,18 @@ NTSTATUS KrEOpenProcessToken(
     __in HANDLE ProcessHandle
 );
 
+BOOLEAN KrESetTokenPrivilege(
+    __in HANDLE TokenHandle,
+    __in_opt PWSTR PrivilegeName,
+    __in_opt PLUID privilegeLuid,
+    __in ULONG Attributes
+);
+
+BOOLEAN KrELookupSid(
+    __in PSID sid,
+    __out_opt KRE_STRING* Name,
+    __out_opt KRE_STRING* DomainName,
+    __out_opt PSID_NAME_USE NameUse
+);
+
 #endif
