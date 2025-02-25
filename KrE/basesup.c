@@ -22,6 +22,13 @@ VOID KrEFree(__in PVOID Memory)
 	return; RtlFreeHeap(KrEHeapHandle, 0, Memory);
 }
 
+PKRE_STRING KrECreateString(
+    __in PWSTR Buffer
+    )
+{
+    return KrECreateStringEx(Buffer, wcslen(Buffer) * sizeof(WCHAR));
+}
+
 PKRE_STRING KrECreateStringEx(
 	__in PWSTR Buffer,
 	__in SIZE_T Length

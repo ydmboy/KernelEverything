@@ -21,6 +21,40 @@ INT KrEShowMessage_V(
 
 }
 
+PKRE_STRING KrEGetSystemDirectory()
+{
+	PKRE_STRING systemDirectory;
+	PVOID buffer;
+	ULONG bufferSize;
+	ULONG returnLength;
+
+	bufferSize = 0x40;
+	buffer = KrEAllocate(bufferSize*2);
+
+	returnLength = GetSystemDirectory(buffer,bufferSize);
+
+	if (returnLength > bufferSize)
+	{
+		KrEFree(buffer);
+		bufferSize = returnLength;
+		buffer = KrEAllocate(bufferSize*2);
+
+		returnLength = GetSystemDirectory(buffer, bufferSize);
+	}
+	if (returnLength == 0)
+	{
+		KrEFree(buffer);
+		return NULL;
+	}
+
+	systemDirectory = KrECreateString(buffer);
+	KrEFree(buffer);
+
+	return systemDirectory;
+
+}
+
+
 
 
 

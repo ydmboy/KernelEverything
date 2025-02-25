@@ -25,7 +25,16 @@ extern HANDLE KrEHeapHandle;
 
 typedef struct _KRE_STRING
 {
-	UNICODE_STRING us;
+	union
+	{
+		UNICODE_STRING us;
+		struct
+		{
+			USHORT Length;
+			USHORT MaximumLength;
+			PWSTR Pointer;
+		};
+	};
 	WCHAR Buffer[1];
 }KRE_STRING,*PKRE_STRING;
 
@@ -40,6 +49,9 @@ PKRE_STRING KrECreateStringEx(
 );
 
 
+PKRE_STRING KrECreateString(
+	__in PWSTR Buffer
+);
 
 
 #endif

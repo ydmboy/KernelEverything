@@ -115,4 +115,12 @@ BOOLEAN KrELookupSid(
     __out_opt PSID_NAME_USE NameUse
 );
 
+VOID KrEInitializeDosDeviceNames();
+
+VOID KrERefreshDosDeviceNames();
+
+PKRE_STRING KrEGetFileName(__in PKRE_STRING FileName);
+
+PKRE_STRING KrEGetSystemDirectory();
+
 #endif

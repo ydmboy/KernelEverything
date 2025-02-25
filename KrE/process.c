@@ -1,6 +1,7 @@
 #include <ph.h>
 
 PKRE_OBJECT_TYPE KrEProcessItemType;
+PWSTR KrEDosDeviceNames[26];
 
 VOID KrEProcessItemDeleteProcedure(
 	__in PVOID Object,
@@ -269,3 +270,45 @@ BOOLEAN KrELookupSid(
 
 }
 
+VOID KrEInitializeDosDeviceNames()
+{
+	ULONG i;
+	for (i = 0; i < 26; i++)
+		KrEDosDeviceNames[i] = KrEAllocate(64*sizeof(WCHAR));
+}
+
+VOID KrERefreshDosDeviceNames()
+{
+	WCHAR deviceName[3];
+	ULONG i;
+
+	deviceName[1] = ":";
+	deviceName[2] = 0;
+
+	for (i = 0; i < 26; i++)
+	{
+		deviceName[0] = (WCHAR)('A'+i);	//driver letter mapping 
+		if (!QueryDosDevice(deviceName, KrEDosDeviceNames[i], 64))
+			KrEDosDeviceNames[i][0] = 0;
+	}
+}
+
+PKRE_STRING KrEGetFileName(__in PKRE_STRING FileName)
+{
+	PKRE_STRING newFileName;
+	newFileName = FileName;
+
+	if (wcsncmp(FileName->Buffer, L"\\??\\", 4) == 0)
+	{
+		newFileName = KrECreateStringEx(NULL, FileName->Length - 8);
+		memcpy(newFileName->Buffer, &FileName->Buffer[4], FileName->Length - 8);
+	}
+	else if (wcsnicmp(FileName->Buffer,L"\\SystemRoot",11) == 0)
+	{
+		PKRE_STRING systemDirectory = KrEGetSystemDirectory();
+		if (systemDirectory)
+		{
+			ULONG indexOfLastBackslash = (ULONG)wcsrchr(systemDirectory->Buffer, '\\');	
+		}
+	}
+}
