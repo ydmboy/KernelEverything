@@ -8,6 +8,12 @@ VOID KrEProcessItemDeleteProcedure(
 	__in ULONG Flags
 );
 
+NTSTATUS KrEQueryProcessVariableSize(
+	__in HANDLE ProcessHandle,
+	__in PROCESS_INFORMATION_CLASS ProcessInformationClass,
+	__out PPVOID Buffer
+);
+
 NTSTATUS KrEEnumProcesses(
 	__out PPVOID Processes
 )
@@ -303,12 +309,107 @@ PKRE_STRING KrEGetFileName(__in PKRE_STRING FileName)
 		newFileName = KrECreateStringEx(NULL, FileName->Length - 8);
 		memcpy(newFileName->Buffer, &FileName->Buffer[4], FileName->Length - 8);
 	}
-	else if (wcsnicmp(FileName->Buffer,L"\\SystemRoot",11) == 0)
+	else if (_wcsnicmp(FileName->Buffer,L"\\SystemRoot",11) == 0)
 	{
 		PKRE_STRING systemDirectory = KrEGetSystemDirectory();
 		if (systemDirectory)
 		{
-			ULONG indexOfLastBackslash = (ULONG)wcsrchr(systemDirectory->Buffer, '\\');	
+			ULONG indexOfLastBackslash = (ULONG)(wcsrchr(systemDirectory->Buffer, '\\')-systemDirectory->Buffer);
+
+
+            newFileName = KrECreateStringEx(NULL, indexOfLastBackslash * 2 + FileName->Length - 11);
+            memcpy(newFileName->Buffer, systemDirectory->Buffer, indexOfLastBackslash * 2);
+            memcpy(&newFileName->Buffer[indexOfLastBackslash], &FileName->Buffer[11], FileName->Length - 22);
+            KrEDereferenceObject(systemDirectory);
+
+		}
+		    else
+    {
+        ULONG i;
+
+        for (i = 0; i < 26; i++)
+        {
+            PWSTR prefix = KrEDosDeviceNames[i];
+            ULONG prefixLength = wcslen(prefix);
+
+            if (prefixLength > 0)
+            {
+                if (_wcsnicmp(FileName->Buffer, prefix, prefixLength) == 0)
+                {
+                    newFileName = KrECreateStringEx(NULL, 4 + FileName->Length - prefixLength * 2);
+                    newFileName->Buffer[0] = 'A' + i;
+                    newFileName->Buffer[1] = ':';
+                    memcpy(&newFileName->Buffer[2], &FileName->Buffer[prefixLength], FileName->Length - prefixLength * 2);
+
+                    break;
+                }
+            }
+        }
+    }
+	}
+}
+
+NTSTATUS KrEGetProcessImageFileName(
+	__in HANDLE ProcessHandle,
+	__out PKRE_STRING * FileName
+)
+{
+	NTSTATUS status;
+	PVOID buffer;
+	PUNICODE_STRING fileName;
+
+	status = KrEQueryProcessVariableSize(
+		ProcessHandle,
+		27,
+		&buffer
+	);
+
+
+}
+
+
+NTSTATUS KrEQueryProcessVariableSize(
+	__in HANDLE ProcessHandle,
+	__in PROCESS_INFORMATION_CLASS ProcessInformationClass,
+	__out PPVOID Buffer
+)
+{
+	NTSTATUS status;
+	ULONG bufferSize = 0;
+	PVOID buffer = NULL;
+
+	while(TRUE)
+	{
+		status = NtQueryInformationProcess(
+			ProcessHandle,
+			ProcessInformationClass,
+			buffer,
+			bufferSize,
+			&bufferSize
+		);
+
+		if(
+			status == STATUS_BUFFER_OVERFLOW ||
+			status == STATUS_BUFFER_TOO_SMALL ||
+			status == STATUS_INFO_LENGTH_MISMATCH
+			)
+		{
+			if (buffer)
+				KrEFree(buffer);
+		}
+		else
+		{
+			break;
 		}
 	}
+
+	if(!NT_SUCCESS(status))
+	{
+		if (buffer)
+			KrEFree(buffer);
+		return status;
+	}
+
+	*Buffer = buffer;
+	return status;
 }

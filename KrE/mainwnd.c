@@ -16,6 +16,8 @@ static INT NetworkTabIndex;
 
 VOID KrEmainWndTabControlOnSelectionChanged();
 VOID KrEMainWndControlOnNotify(__in LPNMHDR Header);
+VOID FillProcessInfo(
+	__inout PKRE_PROCESS_ITEM ProcessItem);
 
 BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 {
@@ -51,6 +53,8 @@ VOID EnumerateProcesses()
 		processItem = KrECreateProcessItem(process->UniqueProcessId);
 		processItem->ProcessName = KrECreateStringEx(process->ImageName.Buffer, process->ImageName.Length);
 		_snwprintf_s(processItem->ProcessIdString, KRE_INT_STR_LEN_1, KRE_INT_STR_LEN, L"%d", processItem->ProcessId);
+
+		// add the FillProcess
 
 		lvItemIndex = KrEAddListViewItem(
 			ProcessListViewHandle,
@@ -212,3 +216,11 @@ VOID KrEmainWndTabControlOnSelectionChanged()
 	KrEmainWndTabControlOnLayout();
 }
 
+
+VOID FillProcessInfo(
+	__inout PKRE_PROCESS_ITEM ProcessItem)
+{
+	NTSTATUS status;
+	HANDLE	processHandle;
+	status = KrEOpenProcess(&processHandle,PROCESS_QUERY_INFORMATION,ProcessItem->ProcessId);
+}
