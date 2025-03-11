@@ -223,4 +223,15 @@ VOID FillProcessInfo(
 	NTSTATUS status;
 	HANDLE	processHandle;
 	status = KrEOpenProcess(&processHandle,PROCESS_QUERY_INFORMATION,ProcessItem->ProcessId);
+
+	if (!NT_SUCCESS(status))
+		return;
+	PKRE_STRING fileName;
+
+	status = KrEGetProcessImageFileName(
+		processHandle,
+		&fileName
+	);
 }
+
+

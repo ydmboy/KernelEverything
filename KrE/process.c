@@ -349,6 +349,7 @@ PKRE_STRING KrEGetFileName(__in PKRE_STRING FileName)
 	}
 }
 
+
 NTSTATUS KrEGetProcessImageFileName(
 	__in HANDLE ProcessHandle,
 	__out PKRE_STRING * FileName
@@ -363,8 +364,12 @@ NTSTATUS KrEGetProcessImageFileName(
 		27,
 		&buffer
 	);
+	if (!NT_SUCCESS(status))
+		return status;
 
-
+	fileName = (PUNICODE_STRING)buffer;
+	*FileName = KrECreateStringEx(fileName->Buffer,fileName->Length);
+	return status;
 }
 
 
@@ -396,6 +401,7 @@ NTSTATUS KrEQueryProcessVariableSize(
 		{
 			if (buffer)
 				KrEFree(buffer);
+			buffer = KrEAllocate(bufferSize);
 		}
 		else
 		{
