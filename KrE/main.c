@@ -136,6 +136,7 @@ BOOLEAN KrEInitializeSystem()
     if (!KrEInitializeProcessItem())
         return FALSE;
     KrEInitializeDosDeviceNames();
+    KrERefreshDosDeviceNames();
 
 
     return TRUE;

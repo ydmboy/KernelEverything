@@ -52,9 +52,11 @@ VOID EnumerateProcesses()
 			RtlInitUnicodeString(&process->ImageName, L"System Idle Process");
 		processItem = KrECreateProcessItem(process->UniqueProcessId);
 		processItem->ProcessName = KrECreateStringEx(process->ImageName.Buffer, process->ImageName.Length);
-		_snwprintf_s(processItem->ProcessIdString, KRE_INT_STR_LEN_1, KRE_INT_STR_LEN, L"%d", processItem->ProcessId);
+		_snwprintf_s(processItem->ProcessIdString, KRE_INT_STR_LEN_1, KRE_INT_STR_LEN, L"%d", (int)processItem->ProcessId);
+
 
 		// add the FillProcess
+		FillProcessInfo(processItem);
 
 		lvItemIndex = KrEAddListViewItem(
 			ProcessListViewHandle,
@@ -62,7 +64,12 @@ VOID EnumerateProcesses()
 			processItem->ProcessName->Buffer,
 			processItem
 		);
+
+		// set the item value ;
 		KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,1,processItem->ProcessIdString);
+		KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,2,KrEGetString(processItem->UserName));
+		KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,3,KrEGetString(processItem->FileName));
+		//KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,3,"123");
 	} while (process = KRE_NEXT_PROCESS(process));
 	KrEFree(processes);
 }
@@ -82,9 +89,17 @@ VOID KrEMainWndCreateTab()
 	ServiceTabIndex = KrEAddTabControlTab(TabControlHandle, 1, L"Services");
 	NetworkTabIndex = KrEAddTabControlTab(TabControlHandle, 2, L"NetWork");
 
+
+	// First Tab of the process
 	ProcessListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_PROCESSLV);
 	ListView_SetExtendedListViewStyleEx(ProcessListViewHandle, LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES, -1);
-	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Process Name");
+	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"Name");
+	KrEAddListViewColumn(ProcessListViewHandle, 1, 1, 1, LVCFMT_LEFT, 80, L"PID");
+	KrEAddListViewColumn(ProcessListViewHandle, 2, 2, 2, LVCFMT_LEFT, 80, L"UserName");
+	KrEAddListViewColumn(ProcessListViewHandle, 3,3, 3, LVCFMT_LEFT, 200, L"FileName");
+
+
+
 
 	ServiceListViewHandle = KrECreateListViewControl(KrEMainWindowHandle, ID_MAINWND_SERVICELV);
 	ListView_SetExtendedListViewStyleEx(ServiceListViewHandle, LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES, -1);
@@ -95,11 +110,12 @@ VOID KrEMainWndCreateTab()
 		LVS_EX_DOUBLEBUFFER | LVS_EX_GRIDLINES , -1);
 
 
-	KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"NetWork");
+	//KrEAddListViewColumn(NetworkListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"NetWork");
+	//KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"name");
+	//KrEAddListViewColumn(ProcessListViewHandle, 1, 1, 1, LVCFMT_LEFT, 80, L"pid");
 
 
-	KrEAddListViewColumn(ProcessListViewHandle, 0, 0, 0, LVCFMT_LEFT, 100, L"name");
-	KrEAddListViewColumn(ProcessListViewHandle, 1, 1, 1, LVCFMT_LEFT, 80, L"pid");
+
 
 	EnumerateProcesses();
 }
@@ -232,6 +248,53 @@ VOID FillProcessInfo(
 		processHandle,
 		&fileName
 	);
+	if(NT_SUCCESS(status))
+	{
+		PKRE_STRING newFileName;
+
+		newFileName = KrEGetFileName(fileName);
+		KrESwapReference(&ProcessItem->FileName, newFileName);
+
+		KrEDereferenceObject(fileName);
+		KrEDereferenceObject(newFileName);
+	}
+
+	HANDLE tokenHandle;
+	status = KrEOpenProcessToken(&tokenHandle, TOKEN_QUERY, processHandle);
+
+	if(NT_SUCCESS(status))
+	{
+		PTOKEN_USER user;
+		status = KrEGetTokenUser(tokenHandle, &user);
+		if(NT_SUCCESS(status))
+		{
+			PKRE_STRING userName;
+			PKRE_STRING domainName;
+
+			if(KrELookupSid(user->User.Sid,&userName,&domainName,NULL))
+			{
+				PKRE_STRING fullName;
+				fullName = KrECreateStringEx(NULL, domainName->Length + 2 + userName->Length);
+				memcpy(fullName->Buffer, domainName->Buffer, domainName->Length);
+				fullName->Buffer[domainName->Length / 2] = L"\\";
+				memcpy(&fullName->Buffer[domainName->Length / 2 + 1], userName->Buffer, userName->Length);
+
+				KrESwapReference(&ProcessItem->UserName, fullName);
+
+				KrEDereferenceObject(userName);
+				KrEDereferenceObject(domainName);
+				KrEDereferenceObject(fullName);
+			}
+			KrEFree(user);
+
+		}
+		if (tokenHandle)
+			CloseHandle(tokenHandle);
+
+	}
+
+	if (tokenHandle)
+		CloseHandle(processHandle);
 }
 
 

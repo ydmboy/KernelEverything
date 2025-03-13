@@ -49,4 +49,21 @@ LONG KrEDereferenceObjectEx(
 	__in BOOLEAN DeferDelete
 );
 
+VOID KrEReferenceObject(
+	__in PVOID Object
+);
+
+VOID FORCEINLINE KrESwapReference(
+	__inout PPVOID ObjectReference,
+	__in PVOID	NewObject
+)
+{
+	PVOID oldObject;
+	oldObject = *ObjectReference;
+	*ObjectReference = NewObject;
+
+	if (oldObject) KrEDereferenceObject(oldObject);
+	if (NewObject) KrEReferenceObject(NewObject);
+}
+
 #endif

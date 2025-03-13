@@ -204,3 +204,12 @@ BOOLEAN KrEDereferenceObject(__in PVOID Object)
 	return KrEDereferenceObjectEx(Object, 1, FALSE) == 0;
 }
 
+VOID KrEReferenceObject(
+	__in PVOID Object
+)
+{
+	PKRE_OBJECT_HEADER objectHeader;
+	objectHeader = KrEObjectToObjectHeader(Object);
+	InterlockedIncrement(&objectHeader->RefCount);
+
+}

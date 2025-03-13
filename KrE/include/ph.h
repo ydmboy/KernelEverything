@@ -110,8 +110,8 @@ BOOLEAN KrESetTokenPrivilege(
 
 BOOLEAN KrELookupSid(
     __in PSID sid,
-    __out_opt KRE_STRING* Name,
-    __out_opt KRE_STRING* DomainName,
+    __out_opt PKRE_STRING* Name,
+    __out_opt PKRE_STRING* DomainName,
     __out_opt PSID_NAME_USE NameUse
 );
 
@@ -122,5 +122,10 @@ VOID KrERefreshDosDeviceNames();
 PKRE_STRING KrEGetFileName(__in PKRE_STRING FileName);
 
 PKRE_STRING KrEGetSystemDirectory();
+
+NTSTATUS KrEGetProcessImageFileName(
+    __in HANDLE ProcessHandle,
+    __out PKRE_STRING* FileName
+);
 
 #endif

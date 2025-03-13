@@ -53,6 +53,16 @@ PKRE_STRING KrECreateString(
 	__in PWSTR Buffer
 );
 
+PWSTR FORCEINLINE KrEGetString(
+    __in_opt PKRE_STRING String
+    )
+{
+    if (String)
+        return String->Buffer;
+    else
+        return NULL;
+}
+
 
 #endif
 

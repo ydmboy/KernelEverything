@@ -226,8 +226,8 @@ BOOLEAN KrESetTokenPrivilege(
 
 BOOLEAN KrELookupSid(
 	__in PSID Sid,
-	__out_opt KRE_STRING *Name,
-	__out_opt KRE_STRING *DomainName,
+	__out_opt PKRE_STRING *Name, 
+	__out_opt PKRE_STRING *DomainName,
 	__out_opt PSID_NAME_USE NameUse
 )
 {
@@ -272,6 +272,17 @@ BOOLEAN KrELookupSid(
 			return FALSE;
 		}
 	}
+	if (Name)
+		*Name = KrECreateString(nameBuffer);
+	if (DomainName)
+		*DomainName = KrECreateString(domainNameBuffer);
+	if (NameUse)
+		*NameUse = nameUse;
+
+	KrEFree(nameBuffer);
+	KrEFree(domainNameBuffer);
+
+	return TRUE;
 
 
 }
@@ -288,14 +299,17 @@ VOID KrERefreshDosDeviceNames()
 	WCHAR deviceName[3];
 	ULONG i;
 
-	deviceName[1] = ":";
+	deviceName[1] = ':';
 	deviceName[2] = 0;
 
 	for (i = 0; i < 26; i++)
 	{
-		deviceName[0] = (WCHAR)('A'+i);	//driver letter mapping 
-		if (!QueryDosDevice(deviceName, KrEDosDeviceNames[i], 64))
+		deviceName[0] = (WCHAR)('A'+i);	//driver letter mapping
+		if(KrEDosDeviceNames[i])
+		{
+			if (!QueryDosDevice(deviceName, KrEDosDeviceNames[i], 64))
 			KrEDosDeviceNames[i][0] = 0;
+		}
 	}
 }
 
@@ -309,21 +323,22 @@ PKRE_STRING KrEGetFileName(__in PKRE_STRING FileName)
 		newFileName = KrECreateStringEx(NULL, FileName->Length - 8);
 		memcpy(newFileName->Buffer, &FileName->Buffer[4], FileName->Length - 8);
 	}
-	else if (_wcsnicmp(FileName->Buffer,L"\\SystemRoot",11) == 0)
+	else if (_wcsnicmp(FileName->Buffer, L"\\SystemRoot", 11) == 0)
 	{
 		PKRE_STRING systemDirectory = KrEGetSystemDirectory();
 		if (systemDirectory)
 		{
-			ULONG indexOfLastBackslash = (ULONG)(wcsrchr(systemDirectory->Buffer, '\\')-systemDirectory->Buffer);
+			ULONG indexOfLastBackslash = (ULONG)(wcsrchr(systemDirectory->Buffer, '\\') - systemDirectory->Buffer);
 
 
-            newFileName = KrECreateStringEx(NULL, indexOfLastBackslash * 2 + FileName->Length - 11);
-            memcpy(newFileName->Buffer, systemDirectory->Buffer, indexOfLastBackslash * 2);
-            memcpy(&newFileName->Buffer[indexOfLastBackslash], &FileName->Buffer[11], FileName->Length - 22);
-            KrEDereferenceObject(systemDirectory);
+			newFileName = KrECreateStringEx(NULL, indexOfLastBackslash * 2 + FileName->Length - 11);
+			memcpy(newFileName->Buffer, systemDirectory->Buffer, indexOfLastBackslash * 2);
+			memcpy(&newFileName->Buffer[indexOfLastBackslash], &FileName->Buffer[11], FileName->Length - 22);
+			KrEDereferenceObject(systemDirectory);
 
 		}
-		    else
+	}
+	else
     {
         ULONG i;
 
@@ -345,8 +360,8 @@ PKRE_STRING KrEGetFileName(__in PKRE_STRING FileName)
                 }
             }
         }
-    }
 	}
+	return newFileName;
 }
 
 
