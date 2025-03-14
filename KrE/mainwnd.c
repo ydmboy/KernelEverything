@@ -21,6 +21,18 @@ VOID FillProcessInfo(
 
 BOOLEAN KrEMainWndInitialization(__in INT ShowCommand)
 {
+
+	{
+		HANDLE tokenHandle;
+		if (NT_SUCCESS(KrEOpenProcessToken(
+			&tokenHandle,
+			TOKEN_ADJUST_PRIVILEGES,
+			NtCurrentProcess()
+		)))
+		{
+			KrESetTokenPrivilege(tokenHandle, L"SeDebugPrivilege", NULL, SE_PRIVILEGE_ENABLED);
+		}
+	}
 	KrEMainWindowHandle = CreateWindow(KrEWindowClassName, KrE_APP_NAME, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, KrEInstanceHandle, NULL);
 	if (!KrEMainWindowHandle)
 		return FALSE;
