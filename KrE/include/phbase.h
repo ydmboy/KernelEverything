@@ -38,6 +38,11 @@ typedef struct _KRE_STRING
 	WCHAR Buffer[1];
 }KRE_STRING,*PKRE_STRING;
 
+typedef struct _KRE_LIST{
+	ULONG Count;
+	ULONG AllocateCount;
+	PPVOID Items;
+}KRE_LIST,*PKRE_LIST;
 
 BOOLEAN KrEInitializeBase();
 PVOID KrEAllocate(__in SIZE_T Size);
@@ -62,6 +67,11 @@ PWSTR FORCEINLINE KrEGetString(
     else
         return NULL;
 }
+
+VOID KrEListDeleteProcedure(
+	__in PVOID Object,
+	__in ULONG Flags
+);
 
 
 #endif

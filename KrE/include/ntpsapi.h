@@ -9,7 +9,21 @@
 #include <ntbasic.h>
 #include <ntpebteb.h>
 
+
+//
+//typedef struct _PROCESS_BASIC_INFORMATION{
+//    NTSTATUS ExitStatus;
+//    PPEB 
+//};
+
+
 // System calls
+
+
+typedef struct _PEB_LDR_DATA
+{
+	
+}PEB_LDR_DATA,*PPEB_LDR_DATA;
 
 typedef NTSTATUS(NTAPI* _NtOpenProcess)(
     __out PHANDLE ProcessHandle,

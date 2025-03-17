@@ -81,6 +81,7 @@ VOID EnumerateProcesses()
 		KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,1,processItem->ProcessIdString);
 		KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,2,KrEGetString(processItem->UserName));
 		KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,3,KrEGetString(processItem->FileName));
+		KrESetListViewSubItem(ProcessListViewHandle, lvItemIndex, 4, KrEGetString(processItem->CommandLine));
 		//KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,3,"123");
 	} while (process = KRE_NEXT_PROCESS(process));
 	KrEFree(processes);

@@ -19,41 +19,64 @@
 		((PSYSTEM_PROCESS_INFORMATION)(Process))->NextEntryOffset)): \
 		(VOID*)NULL)
 
+#define KrEGetProcessCommandLine(ProcessHandle,String) \
+    KrEGetProcessPebString(ProcessHandle,KreoCommandLine,String)
+
 typedef struct _KRE_PROCESS_ITEM
 {
-    HANDLE ProcessId;
-    HANDLE ParentProcessId;
-    PKRE_STRING ProcessName;
-    ULONG SessionId;
+	HANDLE ProcessId;
+	HANDLE ParentProcessId;
+	PKRE_STRING ProcessName;
+	ULONG SessionId;
 
-    HICON SmallIcon;
-    HICON LargeIcon;
+	HICON SmallIcon;
+	HICON LargeIcon;
 
-    PKRE_STRING FileName;
-    KRE_STRING CommandLine;
+	PKRE_STRING FileName;
+	PKRE_STRING CommandLine;
 
-    LARGE_INTEGER CreateTime;
+	LARGE_INTEGER CreateTime;
 
-    PKRE_STRING UserName;
-    ULONG IntegrityLevel;
-    PKRE_STRING IntegrityString;
+	PKRE_STRING UserName;
+	ULONG IntegrityLevel;
+	PKRE_STRING IntegrityString;
 
-    ULONG HasParent : 1;
-    ULONG IsBeingDebugged : 1;
-    ULONG IsDotNet : 1;
-    ULONG IsElevated : 1;
-    ULONG IsInJob : 1;
-    ULONG IsInSignificantJob : 1;
-    ULONG IsPacked : 1;
-    ULONG IsPosix : 1;
-    ULONG IsWow64 : 1;
+	ULONG HasParent : 1;
+	ULONG IsBeingDebugged : 1;
+	ULONG IsDotNet : 1;
+	ULONG IsElevated : 1;
+	ULONG IsInJob : 1;
+	ULONG IsInSignificantJob : 1;
+	ULONG IsPacked : 1;
+	ULONG IsPosix : 1;
+	ULONG IsWow64 : 1;
 
-    WCHAR ProcessIdString[KRE_INT_STR_LEN_1];
-    WCHAR ParentProcessIdString[KRE_INT_STR_LEN_1];
-    WCHAR SessionIdString[KRE_INT_STR_LEN_1];
+	WCHAR ProcessIdString[KRE_INT_STR_LEN_1];
+	WCHAR ParentProcessIdString[KRE_INT_STR_LEN_1];
+	WCHAR SessionIdString[KRE_INT_STR_LEN_1];
 
-    FLOAT CpuUsage; // from 0 to 1
+	FLOAT CpuUsage; // from 0 to 1
 } KRE_PROCESS_ITEM, * PKRE_PROCESS_ITEM;
+
+
+typedef enum _KRE_PEB_OFFSET
+{
+	KreoCurrentDirectory,
+	KreoDllPath,
+	KreoImagePathName,
+	KreoCommandLine,
+	KreoWindowTitle,
+	KreoDesktopName,
+	KreoShellInfo,
+	KreoRuntimeData,
+}KRE_PEB_OFFSET,*PKRE_PEB_OFFSET;
+
+
+NTSTATUS KrEGetProcessCommandLine(
+	__in HANDLE ProcessHandle,
+	__in KRE_PEB_OFFSET Offset,
+	__out PKRE_STRING* String
+);
 
 
 PKRE_PROCESS_ITEM KrECreateProcessItem(

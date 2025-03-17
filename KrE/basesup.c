@@ -2,14 +2,25 @@
 #include <phbase.h>
 
 PKRE_OBJECT_TYPE KrEStringType;
+PKRE_OBJECT_TYPE KrEListType;
 
 BOOLEAN KrEInitializeBase()
 {
-	return NT_SUCCESS(KrECreateObjectType(
+	if(!NT_SUCCESS(KrECreateObjectType(
 		&KrEStringType,
 		0,
 		NULL
-		));
+		))){
+		return FALSE;
+	}
+	if (!NT_SUCCESS(KrECreateObjectType(
+		&KrEListType,
+		0,
+		KrEListDeleteProcedure
+	))){
+		return FALSE;
+	}
+	return TRUE;
 }
 
  PVOID KrEAllocate(__in SIZE_T Size)
@@ -56,4 +67,16 @@ PKRE_STRING KrECreateStringEx(
 	return string;
 
 
+}
+
+VOID KrEListDeleteProcedure(
+	__in PVOID Object,
+	__in ULONG Flags
+)
+{
+	PKRE_LIST list = (PKRE_LIST)Object;
+	ULONG i;
+	for(i=0;i<list->Count;i++){
+		KrEDereferenceObject(list->Items[i]);
+	}
 }

@@ -57,9 +57,7 @@ BOOLEAN KrEInitializeProcessItem()
 	return NT_SUCCESS(KrECreateObjectType(&KrEProcessItemType,
 		0,
 		KrEProcessItemDeleteProcedure
-	));
-
-	
+	));	
 }
 
 
