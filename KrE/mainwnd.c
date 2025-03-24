@@ -255,6 +255,7 @@ VOID FillProcessInfo(
 
 	if (!NT_SUCCESS(status))
 		return;
+
 	PKRE_STRING fileName;
 
 	status = KrEGetProcessImageFileName(
@@ -270,6 +271,19 @@ VOID FillProcessInfo(
 
 		KrEDereferenceObject(fileName);
 		KrEDereferenceObject(newFileName);
+	}
+
+
+	HANDLE processHandle2;
+	status = KrEOpenProcess(
+		&processHandle2,
+		PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
+		ProcessItem->ProcessId
+	);
+	if(NT_SUCCESS(status))
+	{
+		PKRE_STRING commandLine;
+		status = KrEGetProcessCommndLine(processHandle2,&commandLine);
 	}
 
 	HANDLE tokenHandle;

@@ -22,7 +22,13 @@
 
 typedef struct _PEB_LDR_DATA
 {
-	
+    ULONG length;
+    BOOLEAN Initialized;
+    HANDLE SsHandle;
+    LIST_ENTRY InLoadOrderModuleList;
+    LIST_ENTRY InMemoryOrderModuleList;
+    LIST_ENTRY InInitializationOrderModuleList;
+    PVOID EntryInProgress;
 }PEB_LDR_DATA,*PPEB_LDR_DATA;
 
 typedef NTSTATUS(NTAPI* _NtOpenProcess)(
