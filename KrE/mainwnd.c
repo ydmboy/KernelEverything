@@ -283,7 +283,7 @@ VOID FillProcessInfo(
 	if(NT_SUCCESS(status))
 	{
 		PKRE_STRING commandLine;
-		status = KrEGetProcessCommndLine(processHandle2,&commandLine);
+		status = KrEGetProcessCommandLine(processHandle2,&commandLine);
 	}
 
 	HANDLE tokenHandle;

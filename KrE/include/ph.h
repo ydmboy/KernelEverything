@@ -22,6 +22,9 @@
 #define KrEGetProcessCommandLine(ProcessHandle,String) \
     KrEGetProcessPebString(ProcessHandle,KreoCommandLine,String)
 
+
+
+
 typedef struct _KRE_PROCESS_ITEM
 {
 	HANDLE ProcessId;
@@ -72,12 +75,11 @@ typedef enum _KRE_PEB_OFFSET
 }KRE_PEB_OFFSET,*PKRE_PEB_OFFSET;
 
 
-NTSTATUS KrEGetProcessCommandLine(
-	__in HANDLE ProcessHandle,
-	__in KRE_PEB_OFFSET Offset,
-	__out PKRE_STRING* String
-);
-
+//**8NTSTATUS KrEGetProcessCommandLine(
+//	__in HANDLE ProcessHandle,
+//	__in KRE_PEB_OFFSET Offset,
+//	__out PKRE_STRING* String
+//
 
 PKRE_PROCESS_ITEM KrECreateProcessItem(
 	__in HANDLE ProcessId

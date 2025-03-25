@@ -6,8 +6,9 @@
 #endif
 
 #include <ntbasic.h>
-//#include <ntldr.h>
+#include <ntldr.h>
 #include <ntrtl.h>
+
 
 
 typedef struct _PEB

@@ -5,6 +5,8 @@
 #pragma once
 #endif
 
+
+
 typedef NTSTATUS(NTAPI* _NtOpenProcessToken)(
     __in HANDLE ProcessHandle,
     __in ACCESS_MASK DesiredAccess,

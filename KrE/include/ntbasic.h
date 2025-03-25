@@ -29,6 +29,13 @@ typedef enum _WAIT_TYPE
 	WaitAny
 } WAIT_TYPE;
 
+typedef struct _ANSI_STRING
+{
+	USHORT Length;
+	USHORT MaximumLength;
+	PSTR Buffer;
+}STRING ,*PSTRING,ANSI_STRING,*PANSI_STRING;
+
 typedef struct _UNICODE_STRING
 {
 	USHORT Length;

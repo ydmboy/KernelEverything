@@ -6,8 +6,6 @@
 #pragma once
 #endif
 
-#include <ntbasic.h>
-#include <ntpebteb.h>
 
 
 //
@@ -17,8 +15,16 @@
 //};
 
 
-// System calls
+#define GDI_HANDLE_BUFFER_SIZE32 34
+#define GDI_HANDLE_BUFFER_SIZE64 60
 
+#ifndef WIN64
+#define GDI_HANDLE_BUFFER_SIZE GDI_HANDLE_BUFFER_SIZE32
+#else
+#define GDI_HANDLE_BUFFER_SIZE GDI_HANDLE_BUFFER_SIZE64
+#endif
+
+typedef ULONG GDI_HANDLE_BUFFER[GDI_HANDLE_BUFFER_SIZE];
 
 typedef struct _PEB_LDR_DATA
 {
@@ -30,6 +36,8 @@ typedef struct _PEB_LDR_DATA
     LIST_ENTRY InInitializationOrderModuleList;
     PVOID EntryInProgress;
 }PEB_LDR_DATA,*PPEB_LDR_DATA;
+
+#include <ntpebteb.h>
 
 typedef NTSTATUS(NTAPI* _NtOpenProcess)(
     __out PHANDLE ProcessHandle,

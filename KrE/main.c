@@ -3,7 +3,6 @@
 
 #include "resource.h"
 
-
 HINSTANCE KrEInstanceHandle;
 PWSTR KrEWindowClassName = L"KernelEverything";
 HFONT KrEApplicationFont;

@@ -385,6 +385,24 @@ NTSTATUS KrEGetProcessImageFileName(
 	return status;
 }
 
+NTSTATUS KrEGetProcessPebString(
+	__in HANDLE ProcessHandle,
+	__out PKRE_STRING *FileName
+)
+{
+	NTSTATUS status;
+	PVOID buffer;
+	PUNICODE_STRING fileName;
+
+	status = KrEQueryProcessVariableSize(
+		ProcessHandle,
+		27,
+		&buffer);
+	if (!NT_SUCCESS(status))
+		return status;
+	*FileName = KrECreateStringEx(fileName->Buffer, fileName->Length);
+	return status;
+}
 
 NTSTATUS KrEQueryProcessVariableSize(
 	__in HANDLE ProcessHandle,
