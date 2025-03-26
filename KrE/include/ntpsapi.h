@@ -39,6 +39,15 @@ typedef struct _PEB_LDR_DATA
 
 #include <ntpebteb.h>
 
+typedef struct _PROCESS_BASIC_INFORMATION {
+    NTSTATUS ExitStatus;
+    PPEB PebBaseAddress;
+    ULONG_PTR AffinityMask;
+    KPRIORITY BasePriority;
+    ULONG_PTR UniqueProcessId;
+    ULONG_PTR InheritedFromUniqueProcessId;
+}*PPROCESS_BASIC_INFORMATION, PROCESS_BASIC_INFORMATION;
+
 typedef NTSTATUS(NTAPI* _NtOpenProcess)(
     __out PHANDLE ProcessHandle,
     __in ACCESS_MASK DesiredAccess,

@@ -362,6 +362,19 @@ PKRE_STRING KrEGetFileName(__in PKRE_STRING FileName)
 	return newFileName;
 }
 
+NTSTATUS KrEGetProcessBasicInformation(
+	__in HANDLE ProcessHandle,
+	__out PPROCESS_BASIC_INFORMATION BasicInformation
+)
+{
+	return NtQueryInformationProcess(
+		ProcessHandle,
+		0,
+		BasicInformation,
+		sizeof(PROCESS_BASIC_INFORMATION),
+		NULL
+	);
+}
 
 NTSTATUS KrEGetProcessImageFileName(
 	__in HANDLE ProcessHandle,
@@ -387,21 +400,64 @@ NTSTATUS KrEGetProcessImageFileName(
 
 NTSTATUS KrEGetProcessPebString(
 	__in HANDLE ProcessHandle,
-	__out PKRE_STRING *FileName
+	__in PKRE_PEB_OFFSET Offset,
+	__out PKRE_STRING * String
 )
 {
 	NTSTATUS status;
-	PVOID buffer;
-	PUNICODE_STRING fileName;
+	PKRE_STRING string;
+	ULONG offset;
+	PROCESS_BASIC_INFORMATION basicInfo;
+	PVOID address;
+	UNICODE_STRING unicodeString;
 
-	status = KrEQueryProcessVariableSize(
-		ProcessHandle,
-		27,
-		&buffer);
-	if (!NT_SUCCESS(status))
-		return status;
-	*FileName = KrECreateStringEx(fileName->Buffer, fileName->Length);
-	return status;
+	i(!NT_SUCCESS(status= KrEGetBasic))
+
+	switch(Offset)
+	{
+	case KreoCurrentDirectory:
+	{
+		offset = FIELD_OFFSET(RTL_USER_PROCESS_PARAMETERS, CurrentDirectory);
+	}
+	break;
+	case KreoDllPath:
+	{
+		offset = FIELD_OFFSET(RTL_USER_PROCESS_PARAMETERS, DllPath);
+	}
+	break;
+	case KreoImagePathName:
+	{
+		offset = FIELD_OFFSET(RTL_USER_PROCESS_PARAMETERS, ImagePathName);
+	}
+	break;
+	case KreoCommandLine:
+	{
+		offset = FIELD_OFFSET(RTL_USER_PROCESS_PARAMETERS, CommandLine);
+	}
+	break;
+	case KreoWindowTitle:
+	{
+		offset = FIELD_OFFSET(RTL_USER_PROCESS_PARAMETERS, WindowTitle);
+	}
+	break;
+	case KreoDesktopName:
+	{
+		offset = FIELD_OFFSET(RTL_USER_PROCESS_PARAMETERS, DesktopInfo);
+	}
+	break;
+	case KreoShellInfo:
+	{
+		offset = FIELD_OFFSET(RTL_USER_PROCESS_PARAMETERS, ShellInfo);
+	}
+	break;
+	case KreoRuntimeData:
+	{
+		offset = FIELD_OFFSET(RTL_USER_PROCESS_PARAMETERS, RuntimeData);
+	}
+	break;
+	default:
+		return STATUS_INVALID_PARAMETER_2;
+	}
 }
 
 NTSTATUS KrEQueryProcessVariableSize(
