@@ -82,6 +82,8 @@ VOID EnumerateProcesses()
 		KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,2,KrEGetString(processItem->UserName));
 		KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,3,KrEGetString(processItem->FileName));
 		KrESetListViewSubItem(ProcessListViewHandle, lvItemIndex, 4, KrEGetString(processItem->CommandLine));
+
+
 		//KrESetListViewSubItem(ProcessListViewHandle,lvItemIndex,3,"123");
 	} while (process = KRE_NEXT_PROCESS(process));
 	KrEFree(processes);
@@ -110,6 +112,7 @@ VOID KrEMainWndCreateTab()
 	KrEAddListViewColumn(ProcessListViewHandle, 1, 1, 1, LVCFMT_LEFT, 80, L"PID");
 	KrEAddListViewColumn(ProcessListViewHandle, 2, 2, 2, LVCFMT_LEFT, 80, L"UserName");
 	KrEAddListViewColumn(ProcessListViewHandle, 3,3, 3, LVCFMT_LEFT, 200, L"FileName");
+	KrEAddListViewColumn(ProcessListViewHandle, 4, 4, 4, LVCFMT_LEFT, 200, L"CommandLine");
 
 
 
@@ -284,6 +287,12 @@ VOID FillProcessInfo(
 	{
 		PKRE_STRING commandLine;
 		status = KrEGetProcessCommandLine(processHandle2,&commandLine);
+		if(NT_SUCCESS(status))
+		{
+			KrESwapReference(&ProcessItem->CommandLine, commandLine);
+			KrEDereferenceObject(commandLine);
+		}
+		CloseHandle(processHandle2);
 	}
 
 	HANDLE tokenHandle;

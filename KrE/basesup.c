@@ -40,6 +40,8 @@ PKRE_STRING KrECreateString(
     return KrECreateStringEx(Buffer, wcslen(Buffer) * sizeof(WCHAR));
 }
 
+
+
 PKRE_STRING KrECreateStringEx(
 	__in PWSTR Buffer,
 	__in SIZE_T Length
@@ -65,8 +67,6 @@ PKRE_STRING KrECreateStringEx(
 	}
 
 	return string;
-
-
 }
 
 VOID KrEListDeleteProcedure(

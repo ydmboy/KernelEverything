@@ -36,6 +36,7 @@ BOOLEAN KrEInitializeImport()
     InitProcReq("ntdll.dll", NtQueryObject);
     InitProcReq("ntdll.dll", NtQuerySystemInformation);
     InitProcReq("ntdll.dll", NtQueueApcThread);
+    InitProcReq("ntdll.dll", NtReadVirtualMemory);
     InitProcReq("ntdll.dll", NtResumeProcess);
     InitProcReq("ntdll.dll", NtResumeThread);
     InitProcReq("ntdll.dll", NtSetInformationProcess);

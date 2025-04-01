@@ -1,5 +1,6 @@
 #define MAIN_PRIVATE
 #include <phgui.h>
+#include <crtdbg.h>
 
 #include "resource.h"
 
@@ -18,6 +19,8 @@ INT WINAPI wWinMain(
     INT nCmdShow
 )
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    int* p = malloc(sizeof(int));
     KrEInstanceHandle = hInstance;
     KrEHeapHandle = HeapCreate(0,0,0);
 

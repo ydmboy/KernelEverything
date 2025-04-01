@@ -89,6 +89,9 @@
     <ClInclude Include="include\ntrtl.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\ntmmapi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="main.ico">

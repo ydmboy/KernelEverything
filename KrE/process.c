@@ -181,6 +181,25 @@ NTSTATUS KrEOpenProcessToken(
 	);
 }
 
+NTSTATUS KrEReadVirtualMemory(
+	__in HANDLE ProcessHandle,
+	__in PVOID BaseAddress,
+	__out_bcount(BufferSize) PVOID Buffer,
+	__in SIZE_T BufferSize,
+	__out_opt PSIZE_T NumberOfBytesRead
+)
+{
+	return NtReadVirtualMemory(
+		ProcessHandle,
+		BaseAddress,
+		Buffer,
+		BufferSize,
+		NumberOfBytesRead
+	);
+
+	return STATUS_SUCCESS;
+}
+
 BOOLEAN KrESetTokenPrivilege(
 	__in HANDLE TokenHandle,
 	__in_opt PWSTR PrivilegeName,
@@ -395,12 +414,15 @@ NTSTATUS KrEGetProcessImageFileName(
 
 	fileName = (PUNICODE_STRING)buffer;
 	*FileName = KrECreateStringEx(fileName->Buffer,fileName->Length);
+	if(buffer)
+		KrEFree(buffer);
+
 	return status;
 }
 
 NTSTATUS KrEGetProcessPebString(
 	__in HANDLE ProcessHandle,
-	__in PKRE_PEB_OFFSET Offset,
+	__in KRE_PEB_OFFSET Offset,
 	__out PKRE_STRING * String
 )
 {
@@ -411,7 +433,10 @@ NTSTATUS KrEGetProcessPebString(
 	PVOID address;
 	UNICODE_STRING unicodeString;
 
-	i(!NT_SUCCESS(status= KrEGetBasic))
+	if(!NT_SUCCESS(status= KrEGetProcessBasicInformation(ProcessHandle,&basicInfo)))
+	{
+		return status;
+	}
 
 	switch(Offset)
 	{
@@ -458,6 +483,32 @@ NTSTATUS KrEGetProcessPebString(
 	default:
 		return STATUS_INVALID_PARAMETER_2;
 	}
+
+	if (!NT_SUCCESS(status = KrEGetProcessBasicInformation(ProcessHandle, &basicInfo)))
+		return status;
+
+	if (!NT_SUCCESS(status = KrEReadVirtualMemory(ProcessHandle, PTR_ADD_OFFSET(basicInfo.PebBaseAddress, FIELD_OFFSET(PEB, ProcessParameters)), &address, sizeof(PVOID), NULL)))
+		return status;
+	if (!NT_SUCCESS(status = KrEReadVirtualMemory(ProcessHandle, PTR_ADD_OFFSET(address, offset), &unicodeString, sizeof(UNICODE_STRING), NULL)))
+		return status;
+
+	string = KrECreateStringEx(NULL, unicodeString.Length);
+
+	if (!NT_SUCCESS(status = KrEReadVirtualMemory(
+		ProcessHandle,
+		unicodeString.Buffer,
+		string->Buffer,
+		string->Length,
+		NULL
+	)))
+	{
+		KrEDereferenceObject(string);
+		return status;
+	}
+
+	*String = string;
+	return status;
+
 }
 
 NTSTATUS KrEQueryProcessVariableSize(

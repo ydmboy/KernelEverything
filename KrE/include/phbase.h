@@ -23,6 +23,8 @@ extern HINSTANCE KrEInstanceHandle;
 extern HFONT KrEApplicationFont;
 extern HANDLE KrEHeapHandle;
 
+#define PTR_ADD_OFFSET(Pointer,Offset) ((PVOID)((ULONG_PTR)(Pointer)+(ULONG_PTR)(Offset)))
+
 typedef struct _KRE_STRING
 {
 	union

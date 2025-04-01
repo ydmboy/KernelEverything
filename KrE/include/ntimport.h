@@ -7,6 +7,7 @@
 
 #include <ntbasic.h>
 #include <ntexapi.h>
+#include <ntmmapi.h>
 #include <ntobapi.h>
 #include <ntpsapi.h>
 #include <ntseapi.h>
@@ -35,6 +36,7 @@ EXT _NtQueryInformationToken NtQueryInformationToken EQNULL;
 EXT _NtQueryObject NtQueryObject EQNULL;
 EXT _NtQuerySystemInformation NtQuerySystemInformation EQNULL;
 EXT _NtQueueApcThread NtQueueApcThread EQNULL;
+EXT _NtReadVirtualMemory NtReadVirtualMemory EQNULL;
 EXT _NtResumeProcess NtResumeProcess EQNULL;
 EXT _NtResumeThread NtResumeThread EQNULL;
 EXT _NtSetInformationProcess NtSetInformationProcess EQNULL;
